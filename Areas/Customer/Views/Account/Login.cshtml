@@ -42,16 +42,16 @@
                 <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: var(--primary-green-dark);" />
                 <span style="font-size: 0.9rem; color: var(--dark-text);">@Html.DisplayNameFor(m => m.RememberMe)</span>
             </label>
-            <a href="#" style="font-size: 0.9rem; color: var(--primary-green-dark); text-decoration: none; font-weight: 500;">Quên mật khẩu?</a>
+            <a href="/Account/ForgotPassword" style="font-size: 0.9rem; color: var(--primary-green-dark); text-decoration: none; font-weight: 500;">Quên mật khẩu?</a>
         </div>
-
-        <button type="submit" style="width: 100%; padding: 0.875rem; background: var(--primary-green-dark); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+ 
+        <button type="submit" style="width: 100%; padding: 0.875rem; background: #0d6849; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
             Đăng nhập
         </button>
     </form>
     
     <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--light-text);">
-        Chưa có tài khoản? <a href="#" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Đăng ký ngay</a>
+        Chưa có tài khoản? <a href="/Account/Register" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Đăng ký ngay</a>
     </div>
 </div>
 

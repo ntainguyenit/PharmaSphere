@@ -26,11 +26,15 @@
             </form>
 
             <!-- 3. Các điều hướng (Nav Menu) -->
+            @{
+                var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+                var action = ViewContext.RouteData.Values["action"]?.ToString();
+            }
             <nav class="nav-menu">
-                <a href="/" class="nav-link active">Home</a>
-                <a href="/Shop" class="nav-link">Shop</a>
-                <a href="#" class="nav-link">Promotions</a>
-                <a href="#" class="nav-link">News</a>
+                <a href="/" class="nav-link @(controller == "Home" && action == "Index" ? "active" : "")">Home</a>
+                <a href="/Shop" class="nav-link @(controller == "Shop" ? "active" : "")">Shop</a>
+                <a href="/Home/Promotions" class="nav-link @(controller == "Home" && action == "Promotions" ? "active" : "")">Promotions</a>
+                <a href="/Home/News" class="nav-link @(controller == "Home" && action == "News" ? "active" : "")">News</a>
             </nav>
 
             <!-- 4 & 5. Giỏ hàng & Account -->

@@ -1,0 +1,91 @@
+@model PharmaSphere.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="login-container" style="max-width: 500px; margin: 4rem auto; padding: 2.5rem; background: var(--white); border-radius: 16px; box-shadow: var(--shadow-md);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--soft-green); border-radius: 50%; color: var(--primary-green-dark); margin-bottom: 1rem;">
+            <i data-lucide="user-plus" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--dark-text); margin: 0;">Tạo tài khoản mới</h2>
+        <p style="color: var(--light-text); margin-top: 0.5rem;">Tham gia cộng đồng PharmaSphere ngay hôm nay</p>
+    </div>
+
+    <form asp-area="Customer" asp-controller="Account" asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--accent-red); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+
+        <div style="margin-bottom: 1.25rem;">
+            <label asp-for="FullName" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="FullName" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="Nhập họ và tên" />
+            </div>
+            <span asp-validation-for="FullName" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+            <label asp-for="Email" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="Email" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="Nhập địa chỉ email" />
+            </div>
+            <span asp-validation-for="Email" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+            <label asp-for="Username" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="at-sign" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="Username" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="Chọn tên đăng nhập" />
+            </div>
+            <span asp-validation-for="Username" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+            <label asp-for="Password" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="Password" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="Tạo mật khẩu" />
+            </div>
+            <span asp-validation-for="Password" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label asp-for="ConfirmPassword" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="ConfirmPassword" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="Xác nhận lại mật khẩu" />
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem;"></span>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 0.875rem; background: #0d6849; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+            Đăng ký tài khoản
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--light-text);">
+        Đã có tài khoản? <a href="/Account/Login" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Đăng nhập</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <style>
+        .form-control:focus {
+            border-color: var(--primary-green-dark) !important;
+            box-shadow: 0 0 0 3px rgba(123, 207, 166, 0.2);
+        }
+    </style>
+}

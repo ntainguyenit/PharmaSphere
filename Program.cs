@@ -37,16 +37,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Build the application
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// Database seeding and encoding fix
+// Database seeding and dynamic encoding/naming fix for Categories
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<PharmaContext>();
@@ -59,30 +60,33 @@ using (var scope = app.Services.CreateScope())
     context.SaveChanges();
 }
 
+// Middleware Configuration
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseSession();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Assets and Static Files
 app.MapStaticAssets();
 
-// Map Area routes
+// Route Mapping - Specific Routes First
 app.MapAreaControllerRoute(
     name: "customer_login",
     areaName: "Customer",
     pattern: "Account/Login",
     defaults: new { controller = "Account", action = "Login" });
 
+// Area Routes
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+// Default Route (Defaults to Customer Area)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}",
     defaults: new { area = "Customer" });
 
+// Run the application
 app.Run();
