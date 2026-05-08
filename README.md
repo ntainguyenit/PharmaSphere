@@ -6,18 +6,18 @@
 
 ## Các tính năng nổi bật
 
-### Hệ thống Xác thực Kép (Dual Authentication)
+### Hệ thống Xác thực Kép
 Hệ thống sử dụng cơ chế bảo mật độc lập hoàn toàn cho hai nhóm người dùng:
 - **Cổng Khách hàng**: Cho phép người dùng đăng nhập, quản lý giỏ hàng và đặt hàng.
 - **Cổng Quản trị (Admin Portal)**: Giao diện tối ưu dành riêng cho nhân viên và quản lý để kiểm soát hệ thống, được bảo vệ bởi các chính sách bảo mật nghiêm ngặt.
 
-### Trải nghiệm Mua sắm (Customer Experience)
+### Trải nghiệm Mua sắm 
 - **Tìm kiếm thông minh**: Tìm kiếm sản phẩm theo tên, danh mục hoặc thương hiệu.
 - **Chi tiết sản phẩm**: Hiển thị thông tin thành phần, công dụng và sản phẩm liên quan.
 - **Giỏ hàng (Shopping Cart)**: Quản lý giỏ hàng realtime sử dụng Session state.
 - **Thanh toán (Checkout)**: Quy trình đặt hàng đơn giản với nhiều phương thức thanh toán.
 
-### Quản trị Hệ thống (Admin Management)
+### Quản trị Hệ thống
 - **Dashboard**: Thống kê doanh thu và sản phẩm bán chạy.
 - **Quản lý kho**: CRUD Sản phẩm, Danh mục, Thương hiệu.
 - **Quản lý đơn hàng**: Tiếp nhận và xử lý hóa đơn của khách hàng.
