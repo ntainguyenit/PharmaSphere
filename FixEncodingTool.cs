@@ -15,10 +15,10 @@ namespace PharmaSphere
     public class Fixer
     {
         /// <summary>
-        /// Main entry point for the fix tool.
+        /// Executes the fix logic.
         /// </summary>
         /// <param name="args">Command line arguments.</param>
-        public static void Main(string[] args)
+        public static void Execute(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

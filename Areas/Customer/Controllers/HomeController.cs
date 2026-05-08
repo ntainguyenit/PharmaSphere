@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using PharmaSphere.Models;
 using PharmaSphere.Data;
 
-/// <summary>
-/// Controller handling the main landing pages for the Customer area.
-/// </summary>
-[Area("Customer")]
+namespace PharmaSphere.Areas.Customer.Controllers
+{
+    /// <summary>
+    /// Controller handling the main landing pages for the Customer area.
+    /// </summary>
+    [Area("Customer")]
 public class HomeController : Controller
 {
     private readonly PharmaContext _context;
@@ -76,4 +78,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+}
 }

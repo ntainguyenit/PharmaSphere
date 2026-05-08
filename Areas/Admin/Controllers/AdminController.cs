@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 
+namespace PharmaSphere.Areas.Admin.Controllers
+{
     /// <summary>
     /// Controller for the Admin dashboard and management features.
     /// </summary>

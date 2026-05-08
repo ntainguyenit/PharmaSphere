@@ -101,8 +101,43 @@
         </div>
     </footer>
 
+    <div class="notification-container" id="notificationContainer"></div>
+
     <script>
         lucide.createIcons();
+
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            
+            notification.innerHTML = `
+                <i data-lucide="${icon}"></i>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 500);
+            }, 5000);
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <text>showNotification('success', 'Thành công', '@TempData["Success"]');</text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <text>showNotification('error', 'Lỗi', '@TempData["Error"]');</text>
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
