@@ -1,0 +1,149 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Tổng quan Dashboard</h1>
+    <p style="color: var(--light-text);">Theo dõi hoạt động kinh doanh nhà thuốc hôm nay.</p>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="kpi-label">Tổng doanh thu</div>
+                <div class="kpi-value">@(string.Format("{0:N1}M", ViewBag.TotalRevenue / 1000000)) đ</div>
+            </div>
+            <div style="padding: 0.5rem; background: var(--soft-green); color: var(--primary-green-dark); border-radius: 8px;">
+                <i data-lucide="wallet" style="width: 20px;"></i>
+            </div>
+        </div>
+        <div class="kpi-trend trend-up">
+            <i data-lucide="trending-up" style="width: 14px; display: inline;"></i> +12%
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="kpi-label">Số đơn hôm nay</div>
+                <div class="kpi-value">@ViewBag.OrderCount</div>
+            </div>
+            <div style="padding: 0.5rem; background: #ebf5ff; color: #3b82f6; border-radius: 8px;">
+                <i data-lucide="shopping-bag" style="width: 20px;"></i>
+            </div>
+        </div>
+        <div class="kpi-trend trend-up">
+            <i data-lucide="trending-up" style="width: 14px; display: inline;"></i> +5%
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="kpi-label">Sản phẩm sắp hết</div>
+                <div class="kpi-value">@ViewBag.LowStockCount</div>
+            </div>
+            <div style="padding: 0.5rem; background: #fffbeb; color: #f59e0b; border-radius: 8px;">
+                <i data-lucide="alert-triangle" style="width: 20px;"></i>
+            </div>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--accent-red); margin-top: 0.5rem;">Cần nhập thêm</div>
+    </div>
+    <div class="kpi-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="kpi-label">Khách hàng mới</div>
+                <div class="kpi-value">@ViewBag.NewCustomerCount</div>
+            </div>
+            <div style="padding: 0.5rem; background: #f0fdf4; color: #22c55e; border-radius: 8px;">
+                <i data-lucide="users" style="width: 20px;"></i>
+            </div>
+        </div>
+        <div class="kpi-trend trend-up">
+            <i data-lucide="trending-up" style="width: 14px; display: inline;"></i> +22%
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <!-- Revenue Chart -->
+    <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700;">Biểu đồ doanh thu theo tháng</h2>
+            <select style="padding: 0.5rem; border-radius: 8px; border: 1px solid var(--border-color); outline: none;">
+                <option>Năm 2024</option>
+                <option>Năm 2023</option>
+            </select>
+        </div>
+        <canvas id="revenueChart" style="height: 300px;"></canvas>
+    </div>
+
+    <!-- Stats & Alerts -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: var(--shadow-sm);">
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Sản phẩm bán chạy</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                @foreach (var item in ViewBag.TopSelling)
+                {
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 40px; height: 40px; background: var(--bg-light); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="pill" style="width: 20px; color: var(--primary-green-dark);"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">@item.Product</div>
+                                <div style="font-size: 0.75rem; color: var(--light-text);">@item.Sold đã bán</div>
+                            </div>
+                        </div>
+                        <div style="font-weight: 700; color: var(--primary-green-dark);">@(string.Format("{0:N1}M", item.Revenue / 1000000))</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div style="background: #fff1f2; padding: 1.5rem; border-radius: 16px; border: 1px solid #fecaca;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: #b91c1c; font-weight: 700; margin-bottom: 0.5rem;">
+                <i data-lucide="alert-circle" style="width: 20px;"></i>
+                Cảnh báo tồn kho
+            </div>
+            <p style="font-size: 0.85rem; color: #991b1b; line-height: 1.5;">
+                <strong>Khẩu trang y tế 4 lớp</strong> chỉ còn 15 hộp trong kho. Cần nhập hàng gấp.
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Doanh thu (Triệu VNĐ)',
+                    data: [12, 19, 15, 25, 22, 30, 28, 35, 45, 32, 28, 40],
+                    backgroundColor: '#7BCFA6',
+                    borderRadius: 6,
+                    hoverBackgroundColor: '#0d6849'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { drawBorder: false, color: '#f3f4f6' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+}

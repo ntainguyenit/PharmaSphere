@@ -1,0 +1,81 @@
+@model PharmaSphere.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = null; // Don't use the customer layout
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PharmaSphere Admin - Đăng nhập</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #0f172a; /* Dark theme for admin login */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" style="width: 100%; max-width: 400px; padding: 2.5rem; background: white; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #e2e8f0; border-radius: 50%; color: #334155; margin-bottom: 1rem;">
+                <i data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0;">Admin Portal</h2>
+            <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.95rem;">Đăng nhập bằng tài khoản Quản trị</p>
+        </div>
+
+        <form asp-area="Admin" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem; font-size: 0.9rem;"></div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label asp-for="Username" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #334155;"></label>
+                <div style="position: relative;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
+                        <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <input asp-for="Username" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;" placeholder="Tên đăng nhập" />
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label asp-for="Password" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #334155;"></label>
+                <div style="position: relative;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
+                        <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <input asp-for="Password" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;" placeholder="Mật khẩu" />
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: #0f172a;" />
+                    <span style="font-size: 0.9rem; color: #475569; font-weight: 500;">Ghi nhớ đăng nhập</span>
+                </label>
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 0.875rem; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer;">
+                Truy cập hệ thống
+            </button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="/" style="font-size: 0.85rem; color: #64748b; text-decoration: none;">&larr; Quay lại trang khách hàng</a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PharmaSphere</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <!-- 1. Tên (Logo) -->
+            <a href="/" class="logo">
+                <i data-lucide="plus-circle"></i>
+                PharmaSphere
+            </a>
+
+            <!-- 2. Tìm kiếm (Search) -->
+            <form action="/Shop" method="get" class="search-bar" style="margin: 0;">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" name="q" placeholder="Tìm kiếm" />
+            </form>
+
+            <!-- 3. Các điều hướng (Nav Menu) -->
+            <nav class="nav-menu">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/Shop" class="nav-link">Shop</a>
+                <a href="#" class="nav-link">Promotions</a>
+                <a href="#" class="nav-link">News</a>
+            </nav>
+
+            <!-- 4 & 5. Giỏ hàng & Account -->
+            <div class="header-actions">
+                @{
+                    var cartJson = ViewContext.HttpContext.Session.GetString("Cart");
+                    int cartCount = 0;
+                    if (!string.IsNullOrEmpty(cartJson))
+                    {
+                        var items = System.Text.Json.JsonSerializer.Deserialize<List<PharmaSphere.Models.CartItemViewModel>>(cartJson);
+                        cartCount = items.Sum(i => i.Quantity);
+                    }
+                }
+                <a href="/Cart" class="cart-btn">
+                    <i data-lucide="shopping-cart"></i>
+                    <span class="cart-badge">@cartCount</span>
+                </a>
+                
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: var(--primary-green-dark);">
+                            <i data-lucide="user" style="width: 16px; height: 16px; vertical-align: text-bottom; margin-right: 4px;"></i>
+                            @User.Identity.Name
+                        </span>
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                            <button type="submit" class="btn-login" style="background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 0.35rem 1rem;">Logout</button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn-login">Login</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <!-- Left: Copyright -->
+            <div style="opacity: 0.5; font-size: 0.85rem; flex: 1;">
+                © 2024 PharmaSphere. Clinical Precision. Personal Care.
+            </div>
+            
+            <!-- Middle: Policies -->
+            <div style="display: flex; gap: 2rem; justify-content: center; flex: 1;">
+                <a href="#" style="color: white; opacity: 0.7; text-decoration: none; font-size: 0.9rem;">Privacy Policy</a>
+                <a href="#" style="color: white; opacity: 0.7; text-decoration: none; font-size: 0.9rem;">Terms of Service</a>
+                <a href="#" style="color: white; opacity: 0.7; text-decoration: none; font-size: 0.9rem;">Shipping Info</a>
+                <span style="color: white; opacity: 0.3;">|</span>
+                <a href="/Admin" style="color: white; opacity: 0.5; text-decoration: none; font-size: 0.9rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'"><i data-lucide="shield-check" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>Admin Portal</a>
+            </div>
+            
+            <!-- Right: Contact -->
+            <div style="display: flex; gap: 1.5rem; justify-content: flex-end; flex: 1; align-items: center;">
+                <span style="font-size: 0.9rem; opacity: 0.7;"><i data-lucide="phone" style="width: 14px; margin-right: 5px; vertical-align: middle;"></i> 1900 xxxx</span>
+                <span style="font-size: 0.9rem; opacity: 0.7;"><i data-lucide="mail" style="width: 14px; margin-right: 5px; vertical-align: middle;"></i> support@pharmasphere.com</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

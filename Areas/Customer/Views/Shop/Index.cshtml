@@ -1,0 +1,138 @@
+@model IEnumerable<PharmaSphere.Models.Product>
+
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<div class="nav-container" style="padding-top: 3rem; padding-bottom: 5rem; display: grid; grid-template-columns: 300px 1fr; gap: 3rem;">
+    <!-- Sidebar Filters -->
+    <aside>
+        <div style="background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border-color);">
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">Lọc sản phẩm</h2>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--light-text); margin-bottom: 1rem;">Danh mục</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach (var cat in ViewBag.Categories)
+                    {
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                            <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary-green);" />
+                            <span>@cat.Name</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--light-text); margin-bottom: 1rem;">Giá</h3>
+                <input type="range" min="0" max="2000000" style="width: 100%; accent-color: var(--primary-green);" />
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 0.5rem;">
+                    <span>0đ</span>
+                    <span>2.000.000đ+</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--light-text); margin-bottom: 1rem;">Thương hiệu</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach (var brand in ViewBag.Brands)
+                    {
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                            <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--primary-green);" />
+                            <span>@brand.Name</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--light-text); margin-bottom: 1rem;">Loại thuốc</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="radio" name="type" style="width: 18px; height: 18px; accent-color: var(--primary-green);" />
+                        <span>Tất cả</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="radio" name="type" style="width: 18px; height: 18px; accent-color: var(--primary-green);" />
+                        <span>Thuốc kê đơn</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="radio" name="type" style="width: 18px; height: 18px; accent-color: var(--primary-green);" />
+                        <span>Không kê đơn</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Product Grid -->
+    <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 2rem; font-weight: 700;">PharmaSphere - Kết quả tìm kiếm</h1>
+            <span style="color: var(--light-text);">Hiển thị 1-12 trong @Model.Count() kết quả</span>
+        </div>
+
+        <div class="product-grid">
+            @foreach (var product in Model)
+            {
+                <div class="product-card">
+                    @if (product.IsPrescription)
+                    {
+                        <span class="badge-prescription">Kê đơn</span>
+                    }
+                    else
+                    {
+                        <span class="badge-new">Mới</span>
+                    }
+                    <a href="/Shop/Details/@product.Id">
+                        <img src="@product.ImageUrl" class="product-image" alt="@product.Name" />
+                    </a>
+                    <div class="product-info">
+                        <div class="product-brand">@product.Brand.Name</div>
+                        <h3 class="product-name">
+                            <a href="/Shop/Details/@product.Id" style="color: inherit; text-decoration: none;">@product.Name</a>
+                        </h3>
+                        <div class="product-rating">
+                            <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                            <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                            <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                            <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                            <i data-lucide="star" style="width: 14px;"></i>
+                            <span style="color: var(--light-text); margin-left: 5px;">(@product.Rating)</span>
+                        </div>
+                        <div class="product-price">@string.Format("{0:N0}₫", product.Price)</div>
+                        
+                        @if (product.IsPrescription)
+                        {
+                            <a href="/Shop/Details/@product.Id" class="btn-add-cart" style="background: white; color: #0d6849; border: 1px solid #0d6849; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <i data-lucide="file-text"></i>
+                                Yêu cầu đơn thuốc
+                            </a>
+                        }
+                        else
+                        {
+                            <form action="/Cart/Add" method="post">
+                                <input type="hidden" name="id" value="@product.Id" />
+                                <button type="submit" class="btn-add-cart">
+                                    <i data-lucide="shopping-cart"></i>
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; margin-top: 4rem; gap: 0.5rem;">
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: white;"><i data-lucide="chevron-left" style="width: 16px;"></i></button>
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: none; background: #0d6849; color: white; font-weight: 700;">1</button>
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: white;">2</button>
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: white;">3</button>
+            <span style="display: flex; align-items: flex-end; padding: 0 0.5rem;">...</span>
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: white;">10</button>
+            <button style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color); background: white;"><i data-lucide="chevron-right" style="width: 16px;"></i></button>
+        </div>
+    </section>
+</div>

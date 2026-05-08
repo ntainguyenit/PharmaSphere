@@ -1,0 +1,66 @@
+@model PharmaSphere.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="login-container" style="max-width: 450px; margin: 4rem auto; padding: 2.5rem; background: var(--white); border-radius: 16px; box-shadow: var(--shadow-md);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--soft-green); border-radius: 50%; color: var(--primary-green-dark); margin-bottom: 1rem;">
+            <i data-lucide="user" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--dark-text); margin: 0;">Chào mừng trở lại</h2>
+        <p style="color: var(--light-text); margin-top: 0.5rem;">Vui lòng đăng nhập để tiếp tục</p>
+    </div>
+
+    <form asp-area="Customer" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--accent-red); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Username" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="Username" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; transition: border-color 0.2s;" placeholder="Nhập tên đăng nhập (VD: user1)" />
+            </div>
+            <span asp-validation-for="Username" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem; display: block; margin-top: 0.25rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Password" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
+            <div style="position: relative;">
+                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
+                    <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                </div>
+                <input asp-for="Password" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; transition: border-color 0.2s;" placeholder="Nhập mật khẩu (VD: password)" />
+            </div>
+            <span asp-validation-for="Password" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem; display: block; margin-top: 0.25rem;"></span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: var(--primary-green-dark);" />
+                <span style="font-size: 0.9rem; color: var(--dark-text);">@Html.DisplayNameFor(m => m.RememberMe)</span>
+            </label>
+            <a href="#" style="font-size: 0.9rem; color: var(--primary-green-dark); text-decoration: none; font-weight: 500;">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 0.875rem; background: var(--primary-green-dark); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+            Đăng nhập
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--light-text);">
+        Chưa có tài khoản? <a href="#" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Đăng ký ngay</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <style>
+        .form-control:focus {
+            border-color: var(--primary-green-dark) !important;
+            box-shadow: 0 0 0 3px rgba(123, 207, 166, 0.2);
+        }
+    </style>
+}

@@ -1,0 +1,109 @@
+@model PharmaSphere.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="nav-container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 2rem; color: var(--light-text); font-size: 0.9rem;">
+        <a href="/" style="color: var(--primary-green-dark); text-decoration: none;">Trang chủ</a> &gt; 
+        <a href="/Shop" style="color: var(--primary-green-dark); text-decoration: none;">Sản phẩm</a> &gt; 
+        <a href="/Shop?cat=@Model.CategoryId" style="color: var(--primary-green-dark); text-decoration: none;">@Model.Category.Name</a> &gt; 
+        <span style="color: var(--dark-text);">@Model.Name</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 4rem;">
+        <!-- Left: Image -->
+        <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); padding: 2rem; display: flex; align-items: center; justify-content: center;">
+            <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 100%; height: auto; border-radius: 8px;" />
+        </div>
+
+        <!-- Right: Info -->
+        <div>
+            <div style="color: var(--primary-green-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 0.5rem;">@Model.Brand.Name</div>
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--dark-text); margin-bottom: 1rem; line-height: 1.2;">@Model.Name</h1>
+            
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; color: #fbbf24;">
+                    <i data-lucide="star" style="fill: currentColor; width: 18px;"></i>
+                    <i data-lucide="star" style="fill: currentColor; width: 18px;"></i>
+                    <i data-lucide="star" style="fill: currentColor; width: 18px;"></i>
+                    <i data-lucide="star" style="fill: currentColor; width: 18px;"></i>
+                    <i data-lucide="star-half" style="fill: currentColor; width: 18px;"></i>
+                </div>
+                <span style="color: var(--light-text); font-size: 0.95rem;">@Model.Rating/5 (@Model.ReviewCount đánh giá)</span>
+                <span style="color: var(--border-color);">|</span>
+                <span style="color: @(Model.Stock > 0 ? "var(--primary-green-dark)" : "var(--accent-red)"); font-weight: 600;">
+                    @(Model.Stock > 0 ? $"Còn hàng ({Model.Stock})" : "Hết hàng")
+                </span>
+            </div>
+
+            <div style="font-size: 2rem; font-weight: 800; color: var(--primary-green-dark); margin-bottom: 2rem;">
+                @string.Format("{0:N0}₫", Model.Price)
+            </div>
+
+            <p style="color: var(--light-text); line-height: 1.6; margin-bottom: 2rem; font-size: 1.05rem;">
+                @Model.Description
+            </p>
+
+            <div style="background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--dark-text); margin-bottom: 0.5rem;">Thành phần chính:</h3>
+                <p style="color: var(--light-text); margin: 0; line-height: 1.5;">@Model.Ingredients</p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; align-items: stretch;">
+                <div style="display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; width: 120px;">
+                    <button style="width: 40px; background: white; border: none; font-size: 1.25rem; color: var(--dark-text); cursor: pointer;">-</button>
+                    <input type="number" value="1" min="1" max="@Model.Stock" style="width: 40px; border: none; text-align: center; font-weight: 600; outline: none; -moz-appearance: textfield;" />
+                    <button style="width: 40px; background: white; border: none; font-size: 1.25rem; color: var(--dark-text); cursor: pointer;">+</button>
+                </div>
+
+                @if (Model.IsPrescription)
+                {
+                    <button style="flex: 1; background: white; color: var(--primary-green-dark); border: 2px solid var(--primary-green-dark); border-radius: 8px; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer;">
+                        <i data-lucide="file-text"></i> Gửi đơn thuốc
+                    </button>
+                }
+                else
+                {
+                    <form action="/Cart/Add" method="post" style="flex: 1; display: flex;">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button type="submit" style="flex: 1; background: var(--primary-green-dark); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#0a523a'" onmouseout="this.style.background='var(--primary-green-dark)'">
+                            <i data-lucide="shopping-cart"></i> Thêm vào giỏ hàng
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (ViewBag.RelatedProducts != null)
+    {
+        var related = (IEnumerable<PharmaSphere.Models.Product>)ViewBag.RelatedProducts;
+        if (related.Any())
+        {
+            <div style="margin-top: 5rem;">
+                <h2 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 2rem;">Sản phẩm cùng danh mục</h2>
+                <div class="product-grid">
+                    @foreach (var p in related)
+                    {
+                        <div class="product-card">
+                            @if (p.IsPrescription)
+                            {
+                                <span class="badge-prescription">Kê đơn</span>
+                            }
+                            <img src="@p.ImageUrl" class="product-image" alt="@p.Name" />
+                            <div class="product-info">
+                                <h3 class="product-name"><a href="/Shop/Details/@p.Id" style="color: inherit; text-decoration: none;">@p.Name</a></h3>
+                                <div class="product-price">@string.Format("{0:N0}₫", p.Price)</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

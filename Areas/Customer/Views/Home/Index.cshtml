@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">PharmaSphere — Hệ thống nhà thuốc thông minh</h1>
+        <p class="hero-subtitle">Thuốc chính hãng — Giao nhanh — Tư vấn chuyên nghiệp</p>
+        <div class="hero-btns">
+            <a href="/Shop" class="btn-primary">
+                Mua ngay
+                <i data-lucide="arrow-right"></i>
+            </a>
+            <a href="#" class="btn-primary" style="background: transparent; border: 2px solid white;">
+                Tư vấn ngay
+                <i data-lucide="message-circle"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section style="background: white; padding: 4rem 0;">
+    <div class="nav-container">
+        <div class="section-title">
+            <div class="title-content">
+                <h2>Danh mục nổi bật</h2>
+                <p class="subtitle">Khám phá các sản phẩm chăm sóc sức khỏe hàng đầu</p>
+            </div>
+        </div>
+
+        <div class="category-grid">
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var cat in ViewBag.Categories)
+                {
+                    <a href="/Shop?cat=@cat.Id" class="category-card">
+                        <div class="category-icon">
+                            <i data-lucide="@cat.Icon"></i>
+                        </div>
+                        <div class="category-name">@cat.Name</div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<section style="padding: 5rem 0;">
+    <div class="nav-container">
+        <div class="section-title">
+            <h2>Sản phẩm nổi bật</h2>
+            <a href="/Shop" style="color: var(--primary-green); font-weight: 600; text-decoration: none;">Xem tất cả <i data-lucide="chevron-right" style="width: 16px; vertical-align: middle;"></i></a>
+        </div>
+
+        <div class="product-grid">
+            @if (ViewBag.FeaturedProducts != null)
+            {
+                foreach (var product in ViewBag.FeaturedProducts)
+                {
+                    <div class="product-card">
+                        @if (product.IsPrescription)
+                        {
+                            <span class="badge-prescription">Kê đơn</span>
+                        }
+                        else
+                        {
+                            <span class="badge-new">Mới</span>
+                        }
+                        <img src="@product.ImageUrl" class="product-image" alt="@product.Name" />
+                        <div class="product-info">
+                            <div class="product-brand">@product.Brand.Name</div>
+                            <h3 class="product-name">@product.Name</h3>
+                            <div class="product-rating">
+                                <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                                <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                                <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                                <i data-lucide="star" style="fill: #fbbf24; width: 14px;"></i>
+                                <i data-lucide="star" style="width: 14px;"></i>
+                                <span style="color: var(--light-text); margin-left: 5px;">(@product.Rating)</span>
+                            </div>
+                            <div class="product-price">@string.Format("{0:N0}₫", product.Price)</div>
+                            <button class="btn-add-cart">
+                                <i data-lucide="shopping-cart"></i>
+                                Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
