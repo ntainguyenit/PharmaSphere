@@ -25,52 +25,68 @@
     </style>
 </head>
 <body>
-    <div class="login-container" style="width: 100%; max-width: 400px; padding: 2.5rem; background: white; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #e2e8f0; border-radius: 50%; color: #334155; margin-bottom: 1rem;">
-                <i data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+    <div class="login-container" style="display: flex; width: 100%; max-width: 850px; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4);">
+        <!-- Left Side: Brand/Visual -->
+        <div style="flex: 1; background: #0f172a; padding: 4rem 3rem; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -100px; left: -100px; width: 300px; height: 300px; background: rgba(255,255,255,0.03); border-radius: 50%;"></div>
+            <div style="position: absolute; bottom: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.02); border-radius: 50%;"></div>
+            
+            <div style="position: relative; z-index: 1;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; color: #7BCFA6; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                    <i data-lucide="shield-check" style="width: 40px; height: 40px;"></i>
+                </div>
+                <h2 style="font-size: 2.5rem; font-weight: 800; margin: 0; line-height: 1.2;">PharmaSphere<br/><span style="color: #7BCFA6;">Admin Portal</span></h2>
+                <p style="color: #94a3b8; margin-top: 1.5rem; font-size: 1.1rem; line-height: 1.6; max-width: 250px;">Hệ thống quản lý nhà thuốc thông minh & chuyên nghiệp</p>
             </div>
-            <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0;">Admin Portal</h2>
-            <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.95rem;">Đăng nhập bằng tài khoản Quản trị</p>
         </div>
 
-        <form asp-area="Admin" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-            <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1rem; font-size: 0.9rem;"></div>
+        <!-- Right Side: Form -->
+        <div style="flex: 1.2; padding: 4rem; display: flex; flex-direction: column; justify-content: center;">
+            <div style="margin-bottom: 2.5rem;">
+                <h3 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0;">Chào mừng trở lại!</h3>
+                <p style="color: #64748b; margin-top: 0.5rem; font-size: 1rem;">Đăng nhập để quản trị hệ thống</p>
+            </div>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label asp-for="Username" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #334155;"></label>
-                <div style="position: relative;">
-                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
-                        <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+            <form asp-area="Admin" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="ModelOnly" style="color: #ef4444; margin-bottom: 1.5rem; font-size: 0.9rem; padding: 1rem; background: #fef2f2; border-radius: 8px;"></div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label asp-for="Username" style="display: block; font-weight: 600; margin-bottom: 0.6rem; color: #334155; font-size: 0.9rem;">Tên đăng nhập</label>
+                    <div style="position: relative;">
+                        <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
+                            <i data-lucide="user" style="width: 20px; height: 20px;"></i>
+                        </div>
+                        <input asp-for="Username" class="form-control" style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1.5px solid #e2e8f0; border-radius: 12px; outline: none; font-size: 1rem; transition: all 0.2s;" placeholder="Nhập tên đăng nhập" />
                     </div>
-                    <input asp-for="Username" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;" placeholder="Tên đăng nhập" />
                 </div>
-            </div>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label asp-for="Password" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #334155;"></label>
-                <div style="position: relative;">
-                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
-                        <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                <div style="margin-bottom: 1.5rem;">
+                    <label asp-for="Password" style="display: block; font-weight: 600; margin-bottom: 0.6rem; color: #334155; font-size: 0.9rem;">Mật khẩu</label>
+                    <div style="position: relative;">
+                        <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;">
+                            <i data-lucide="lock" style="width: 20px; height: 20px;"></i>
+                        </div>
+                        <input asp-for="Password" type="password" class="form-control" style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1.5px solid #e2e8f0; border-radius: 12px; outline: none; font-size: 1rem; transition: all 0.2s;" placeholder="Nhập mật khẩu" />
                     </div>
-                    <input asp-for="Password" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;" placeholder="Mật khẩu" />
                 </div>
-            </div>
 
-            <div style="display: flex; align-items: center; margin-bottom: 2rem;">
-                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                    <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: #0f172a;" />
-                    <span style="font-size: 0.9rem; color: #475569; font-weight: 500;">Ghi nhớ đăng nhập</span>
-                </label>
-            </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer;">
+                        <input asp-for="RememberMe" type="checkbox" style="width: 18px; height: 18px; accent-color: #0f172a;" />
+                        <span style="font-size: 0.95rem; color: #475569; font-weight: 500;">Ghi nhớ đăng nhập</span>
+                    </label>
+                </div>
 
-            <button type="submit" style="width: 100%; padding: 0.875rem; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer;">
-                Truy cập hệ thống
-            </button>
-        </form>
-        
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="/" style="font-size: 0.85rem; color: #64748b; text-decoration: none;">&larr; Quay lại trang khách hàng</a>
+                <button type="submit" style="width: 100%; padding: 1.1rem; background: #0f172a; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    Đăng nhập hệ thống
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/" style="font-size: 0.95rem; color: #64748b; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i data-lucide="arrow-left" style="width: 16px;"></i> Quay lại trang chủ
+                </a>
+            </div>
         </div>
     </div>
 

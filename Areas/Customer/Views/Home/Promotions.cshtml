@@ -16,7 +16,7 @@
     </div>
 </section>
 
-<div class="nav-container" style="padding: 6rem 0;">
+<div class="nav-container" style="padding: 6rem 1.5rem; max-width: 1200px; margin: 0 auto;">
     <!-- Flash Sale Section -->
     <div id="flash-sale" style="margin-bottom: 7rem; text-align: center;">
         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 4rem;">
@@ -35,25 +35,25 @@
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; text-align: left;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; text-align: left;">
             @for(int i=1; i<=3; i++) {
                 <div style="background: white; border-radius: 28px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);" onmouseover="this.style.transform='translateY(-15px)'; this.style.boxShadow='0 25px 50px -12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)';">
                     <div style="position: relative;">
                         <span style="position: absolute; top: 1.5rem; left: 1.5rem; background: #ef4444; color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 800; font-size: 0.95rem; z-index: 1;">-@(i*15)%</span>
-                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=600" style="width: 100%; height: 320px; object-fit: cover;" />
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=600" style="width: 100%; height: 280px; object-fit: cover;" />
                     </div>
-                    <div style="padding: 2.5rem;">
+                    <div style="padding: 2rem;">
                         <span style="color: var(--light-text); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Dược Phẩm Hoa Linh</span>
-                        <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--dark-text); margin: 0.75rem 0; line-height: 1.4;">Thực phẩm bảo vệ sức khỏe Vitamin C 1000mg</h3>
-                        <div style="display: flex; align-items: center; gap: 1.25rem; margin: 1.5rem 0;">
-                            <span style="font-size: 1.75rem; font-weight: 900; color: #ef4444;">189.000đ</span>
-                            <span style="font-size: 1.1rem; color: var(--light-text); text-decoration: line-through;">250.000đ</span>
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--dark-text); margin: 0.75rem 0; line-height: 1.4; min-height: 3.5rem;">Thực phẩm bảo vệ sức khỏe Vitamin C 1000mg</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin: 1.25rem 0;">
+                            <span style="font-size: 1.5rem; font-weight: 900; color: #ef4444;">189.000đ</span>
+                            <span style="font-size: 1rem; color: var(--light-text); text-decoration: line-through;">250.000đ</span>
                         </div>
-                        <div style="background: #fee2e2; height: 12px; border-radius: 6px; position: relative; margin-bottom: 2.5rem;">
+                        <div style="background: #fee2e2; height: 10px; border-radius: 6px; position: relative; margin-bottom: 2rem;">
                             <div style="position: absolute; left: 0; top: 0; height: 100%; width: @(85 - i*10)%; background: linear-gradient(to right, #ef4444, #f87171); border-radius: 6px;"></div>
-                            <span style="position: absolute; left: 0; top: -1.75rem; font-size: 0.85rem; color: #ef4444; font-weight: 800;">Đã bán @(85 - i*10)%</span>
+                            <span style="position: absolute; left: 0; top: -1.5rem; font-size: 0.8rem; color: #ef4444; font-weight: 800;">Đã bán @(85 - i*10)%</span>
                         </div>
-                        <button onclick="checkAuthAndAddToCart(1)" style="width: 100%; padding: 1.1rem; background: var(--primary-green-dark); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;">Mua Ngay</button>
+                        <button onclick="checkAuthAndAddToCart(1)" style="width: 100%; padding: 1rem; background: #0d6849; color: white; border: none; border-radius: 14px; font-weight: 800; font-size: 1.05rem; cursor: pointer; transition: all 0.3s;">Mua Ngay</button>
                     </div>
                 </div>
             }
@@ -63,33 +63,33 @@
     <!-- Coupons Section (Centered) -->
     <div id="coupons" style="margin-bottom: 7rem;">
         <h2 style="font-size: 2.75rem; font-weight: 800; color: var(--dark-text); margin-bottom: 4rem; text-align: center;">Mã Giảm Giá Độc Quyền</h2>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2.5rem;">
             <div style="background: #fff; border: 3px dashed #0d6849; border-radius: 24px; display: flex; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                <div style="background: #0d6849; color: white; padding: 3rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 160px;">
-                    <span style="font-size: 2.5rem; font-weight: 900;">50K</span>
-                    <span style="font-size: 0.9rem; opacity: 0.9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Giảm</span>
+                <div style="background: #0d6849; color: white; padding: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 140px;">
+                    <span style="font-size: 2.2rem; font-weight: 900;">50K</span>
+                    <span style="font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Giảm</span>
                 </div>
-                <div style="padding: 2.5rem; flex: 1;">
-                    <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--dark-text);">Đơn hàng từ 500K</h4>
-                    <p style="font-size: 1rem; color: var(--light-text); margin: 0.75rem 0 1.5rem;">Hạn dùng: 31/05/2024</p>
-                    <div style="display: flex; gap: 0.75rem;">
-                        <input type="text" id="coupon1" value="PHARMA50" readonly style="flex: 1; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px; font-family: monospace; font-weight: 800; text-align: center; background: #f8fafc; color: var(--primary-green-dark); font-size: 1.2rem;" />
-                        <button onclick="copyToClipboard('coupon1')" style="background: var(--primary-green-dark); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-size: 0.95rem; font-weight: 800; cursor: pointer;">Sao chép</button>
+                <div style="padding: 2rem; flex: 1;">
+                    <h4 style="margin: 0; font-size: 1.3rem; font-weight: 800; color: var(--dark-text);">Đơn hàng từ 500K</h4>
+                    <p style="font-size: 0.95rem; color: var(--light-text); margin: 0.75rem 0 1.5rem;">Hạn dùng: 31/05/2026</p>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" id="coupon1" value="PHARMA50" readonly style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 10px; font-family: monospace; font-weight: 800; text-align: center; background: #f8fafc; color: #0d6849; font-size: 1.1rem; width: 0;" />
+                        <button onclick="copyToClipboard('coupon1', this)" style="background: #0d6849; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.2s;">Sao chép</button>
                     </div>
                 </div>
             </div>
             
-            <div style="background: #fff; border: 3px dashed #0d6849; border-radius: 24px; display: flex; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                <div style="background: #fbbf24; color: #78350f; padding: 3rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 160px;">
-                    <span style="font-size: 2.5rem; font-weight: 900;">FREE</span>
-                    <span style="font-size: 0.9rem; opacity: 0.9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Ship</span>
+            <div style="background: #fff; border: 3px dashed #fbbf24; border-radius: 24px; display: flex; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                <div style="background: #fbbf24; color: #78350f; padding: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 140px;">
+                    <span style="font-size: 2.2rem; font-weight: 900;">FREE</span>
+                    <span style="font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Ship</span>
                 </div>
-                <div style="padding: 2.5rem; flex: 1;">
-                    <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--dark-text);">Đơn hàng từ 300K</h4>
-                    <p style="font-size: 1rem; color: var(--light-text); margin: 0.75rem 0 1.5rem;">Áp dụng toàn quốc</p>
-                    <div style="display: flex; gap: 0.75rem;">
-                        <input type="text" id="coupon2" value="FREESHIP" readonly style="flex: 1; padding: 0.8rem; border: 2px solid var(--border-color); border-radius: 10px; font-family: monospace; font-weight: 800; text-align: center; background: #f8fafc; color: #78350f; font-size: 1.2rem;" />
-                        <button onclick="copyToClipboard('coupon2')" style="background: var(--primary-green-dark); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-size: 0.95rem; font-weight: 800; cursor: pointer;">Sao chép</button>
+                <div style="padding: 2rem; flex: 1;">
+                    <h4 style="margin: 0; font-size: 1.3rem; font-weight: 800; color: var(--dark-text);">Đơn hàng từ 300K</h4>
+                    <p style="font-size: 0.95rem; color: var(--light-text); margin: 0.75rem 0 1.5rem;">Áp dụng toàn quốc</p>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" id="coupon2" value="FREESHIP" readonly style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 10px; font-family: monospace; font-weight: 800; text-align: center; background: #f8fafc; color: #78350f; font-size: 1.1rem; width: 0;" />
+                        <button onclick="copyToClipboard('coupon2', this)" style="background: #0d6849; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.2s;">Sao chép</button>
                     </div>
                 </div>
             </div>
@@ -100,9 +100,15 @@
 <script>
     // Countdown Timer Logic
     function updateCountdown() {
-        let hours = parseInt(document.getElementById('hours').innerText);
-        let minutes = parseInt(document.getElementById('minutes').innerText);
-        let seconds = parseInt(document.getElementById('seconds').innerText);
+        let hoursElem = document.getElementById('hours');
+        let minutesElem = document.getElementById('minutes');
+        let secondsElem = document.getElementById('seconds');
+        
+        if (!hoursElem) return;
+
+        let hours = parseInt(hoursElem.innerText);
+        let minutes = parseInt(minutesElem.innerText);
+        let seconds = parseInt(secondsElem.innerText);
 
         if (seconds > 0) {
             seconds--;
@@ -119,24 +125,46 @@
             }
         }
 
-        document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+        hoursElem.innerText = hours.toString().padStart(2, '0');
+        minutesElem.innerText = minutes.toString().padStart(2, '0');
+        secondsElem.innerText = seconds.toString().padStart(2, '0');
     }
 
     setInterval(updateCountdown, 1000);
 
-    // Copy to clipboard function
-    function copyToClipboard(id) {
+    // Copy to clipboard with anti-spam cooldown
+    let copyCooldowns = {};
+
+    function copyToClipboard(id, btn) {
+        const now = Date.now();
+        if (copyCooldowns[id] && now - copyCooldowns[id] < 5000) {
+            const wait = Math.ceil((5000 - (now - copyCooldowns[id])) / 1000);
+            if (typeof showNotification === 'function') {
+                showNotification('error', 'Chờ một chút', `Vui lòng đợi ${wait} giây để tiếp tục.`);
+            }
+            return;
+        }
+
         const copyText = document.getElementById(id);
         copyText.select();
         copyText.setSelectionRange(0, 99999);
+        
         navigator.clipboard.writeText(copyText.value).then(() => {
+            copyCooldowns[id] = Date.now();
+            const originalText = btn.innerText;
+            btn.innerText = 'Đã chép!';
+            btn.style.background = '#059669';
+            btn.disabled = true;
+
             if (typeof showNotification === 'function') {
-                showNotification('success', 'Thành công', 'Đã sao chép mã giảm giá: ' + copyText.value);
-            } else {
-                alert('Đã sao chép mã: ' + copyText.value);
+                showNotification('success', 'Thành công', 'Đã sao chép mã: ' + copyText.value);
             }
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = '#0d6849';
+                btn.disabled = false;
+            }, 5000);
         });
     }
 </script>
