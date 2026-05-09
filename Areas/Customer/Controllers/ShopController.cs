@@ -31,11 +31,12 @@ namespace PharmaSphere.Areas.Customer.Controllers
         /// <param name="maxPrice">Optional maximum price filter.</param>
         /// <param name="q">Optional search query.</param>
         /// <returns>The shop view with filtered products.</returns>
-        public async Task<IActionResult> Index(int? cat, decimal? minPrice, decimal? maxPrice, string q)
+        public async Task<IActionResult> Index(int? cat, decimal? minPrice, decimal? maxPrice, string q, string type, int page = 1)
         {
+            int pageSize = 4;
             var query = _context.Products.AsQueryable();
 
-            if (cat.HasValue)
+            if (cat.HasValue && cat.Value > 0)
                 query = query.Where(p => p.CategoryId == cat.Value);
 
             if (minPrice.HasValue)
@@ -47,10 +48,36 @@ namespace PharmaSphere.Areas.Customer.Controllers
             if (!string.IsNullOrEmpty(q))
                 query = query.Where(p => p.Name.Contains(q) || p.Description.Contains(q));
 
-            var products = await query.Include(p => p.Brand).Include(p => p.Category).ToListAsync();
+            if (type == "prescription")
+                query = query.Where(p => p.IsPrescription);
+            else if (type == "non-prescription")
+                query = query.Where(p => p.IsPrescription == false);
+
+            int totalItems = await query.CountAsync();
+            int totalPages = (int)System.Math.Ceiling(totalItems / (double)pageSize);
+            
+            // Ensure page is within range
+            if (page < 1) page = 1;
+            if (totalPages > 0 && page > totalPages) page = totalPages;
+
+            var products = await query
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .OrderBy(p => p.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             
             ViewBag.Categories = await _context.Categories.ToListAsync();
             ViewBag.Brands = await _context.Brands.Take(5).ToListAsync();
+            
+            // Pagination Metadata
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.SelectedCategory = cat;
+            ViewBag.SelectedType = type;
+            ViewBag.SearchQuery = q;
             
             return View(products);
         }
