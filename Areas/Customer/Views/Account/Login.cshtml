@@ -1,71 +1,252 @@
 @model PharmaSphere.Models.LoginViewModel
 @{
     ViewData["Title"] = "Đăng nhập";
+    Layout = null; // Use a clean layout for the login page
 }
 
-<div class="login-container" style="max-width: 450px; margin: 4rem auto; padding: 2.5rem; background: var(--white); border-radius: 16px; box-shadow: var(--shadow-md);">
-    <div style="text-align: center; margin-bottom: 2rem;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--soft-green); border-radius: 50%; color: var(--primary-green-dark); margin-bottom: 1rem;">
-            <i data-lucide="user" style="width: 32px; height: 32px;"></i>
-        </div>
-        <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--dark-text); margin: 0;">Chào mừng trở lại</h2>
-        <p style="color: var(--light-text); margin-top: 0.5rem;">Vui lòng đăng nhập để tiếp tục</p>
-    </div>
-
-    <form asp-area="Customer" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--accent-red); margin-bottom: 1rem; font-size: 0.9rem;"></div>
-
-        <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Username" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
-            <div style="position: relative;">
-                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
-                    <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
-                </div>
-                <input asp-for="Username" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; transition: border-color 0.2s;" placeholder="Nhập tên đăng nhập (VD: user1)" />
-            </div>
-            <span asp-validation-for="Username" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem; display: block; margin-top: 0.25rem;"></span>
-        </div>
-
-        <div style="margin-bottom: 1.5rem;">
-            <label asp-for="Password" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--dark-text);"></label>
-            <div style="position: relative;">
-                <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-text);">
-                    <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
-                </div>
-                <input asp-for="Password" class="form-control" style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; transition: border-color 0.2s;" placeholder="Nhập mật khẩu (VD: password)" />
-            </div>
-            <span asp-validation-for="Password" class="text-danger" style="color: var(--accent-red); font-size: 0.85rem; display: block; margin-top: 0.25rem;"></span>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: var(--primary-green-dark);" />
-                <span style="font-size: 0.9rem; color: var(--dark-text);">@Html.DisplayNameFor(m => m.RememberMe)</span>
-            </label>
-            <a href="/Account/ForgotPassword" style="font-size: 0.9rem; color: var(--primary-green-dark); text-decoration: none; font-weight: 500;">Quên mật khẩu?</a>
-        </div>
- 
-        <button type="submit" style="width: 100%; padding: 0.875rem; background: #0d6849; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-bottom: 1rem;">
-            Đăng nhập
-        </button>
-
-        <a href="/Admin/Auth/Login" style="width: 100%; padding: 0.8rem; background: transparent; color: #0d6849; border: 2px solid #0d6849; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;" onmouseover="this.style.background='#0d6849'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#0d6849';">
-            <i data-lucide="shield-check" style="width: 18px;"></i>
-            Đăng nhập dành cho Nhân viên
-        </a>
-    </form>
-    
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--light-text);">
-        Chưa có tài khoản? <a href="/Account/Register" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Đăng ký ngay</a>
-    </div>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PharmaSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        :root {
+            --primary-green: #7BCFA6;
+            --primary-green-dark: #0d6849;
+            --soft-green: #DFF5E8;
+            --accent-red: #E74C3C;
+            --dark-text: #1F2937;
+            --light-text: #6B7280;
+            --white: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        .login-wrapper {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(13, 104, 73, 0.7), rgba(13, 104, 73, 0.8)), 
+                        url('https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--soft-green);
+            border-radius: 16px;
+            color: var(--primary-green-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            width: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
         .form-control:focus {
-            border-color: var(--primary-green-dark) !important;
-            box-shadow: 0 0 0 3px rgba(123, 207, 166, 0.2);
+            border-color: var(--primary-green-dark);
+            box-shadow: 0 0 0 4px rgba(13, 104, 73, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-green-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: #0a523a;
+            transform: translateY(-2px);
+        }
+
+        .btn-admin {
+            width: 100%;
+            padding: 0.8rem;
+            background: transparent;
+            color: var(--primary-green-dark);
+            border: 2px solid var(--primary-green-dark);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        .btn-admin:hover {
+            background: var(--primary-green-dark);
+            color: white;
+        }
+
+        .text-danger {
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .back-to-home:hover {
+            opacity: 1;
         }
     </style>
-}
+</head>
+<body>
+    <div class="login-wrapper">
+        <a href="/" class="back-to-home">
+            <i data-lucide="arrow-left"></i> Quay lại trang chủ
+        </a>
+
+        <div class="login-card">
+            <div style="text-align: center;">
+                <div class="logo-box">
+                    <i data-lucide="pill" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--dark-text); margin: 0;">Chào mừng trở lại</h2>
+                <p style="color: var(--light-text); margin: 0.5rem 0 2rem;">Vui lòng đăng nhập để tiếp tục</p>
+            </div>
+
+            <form asp-area="Customer" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 1rem;"></div>
+
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="user"></i>
+                        <input asp-for="Username" class="form-control" placeholder="Tên đăng nhập (VD: user1)" />
+                    </div>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock"></i>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu (VD: password)" />
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+                        <input asp-for="RememberMe" type="checkbox" style="width: 16px; height: 16px; accent-color: var(--primary-green-dark);" />
+                        Ghi nhớ đăng nhập
+                    </label>
+                    <a href="/Account/ForgotPassword" style="font-size: 0.9rem; color: var(--primary-green-dark); text-decoration: none; font-weight: 600;">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Đăng nhập ngay</button>
+
+                <div style="text-align: center; margin: 1.5rem 0; color: var(--light-text); font-size: 0.9rem; position: relative;">
+                    <span style="background: rgba(255, 255, 255, 0.95); padding: 0 1rem; position: relative; z-index: 1;">Hoặc</span>
+                    <hr style="position: absolute; top: 50%; width: 100%; border: 0; border-top: 1px solid var(--border-color); margin: 0;" />
+                </div>
+
+                <a href="/Admin/Auth/Login" class="btn-admin">
+                    <i data-lucide="shield-check"></i> Đăng nhập dành cho Nhân viên
+                </a>
+            </form>
+
+            <div style="text-align: center; margin-top: 2rem; font-size: 0.95rem; color: var(--light-text);">
+                Chưa có tài khoản? <a href="/Account/Register" style="color: var(--primary-green-dark); text-decoration: none; font-weight: 700;">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

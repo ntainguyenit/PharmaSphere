@@ -1,21 +1,119 @@
 @{
-    ViewData["Title"] = "Promotions";
+    ViewData["Title"] = "Chương trình Khuyến mãi";
 }
 
-<div class="hero-section" style="padding: 4rem 0; background: linear-gradient(rgba(13, 104, 73, 0.9), rgba(13, 104, 73, 0.8)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000');">
-    <div class="hero-content">
-        <h1 class="hero-title" style="font-size: 3rem;">Special Promotions</h1>
-        <p class="hero-subtitle">Discover our latest deals and exclusive offers on healthcare products.</p>
+<section style="background: linear-gradient(135deg, #0d6849 0%, #1a8f65 100%); padding: 5rem 0; color: white; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+    <div style="position: absolute; bottom: -20px; left: 10%; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+    
+    <div class="nav-container" style="position: relative; z-index: 1;">
+        <div style="max-width: 700px;">
+            <span style="background: #fbbf24; color: #78350f; padding: 0.5rem 1.25rem; border-radius: 99px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Đại tiệc ưu đãi tháng 5</span>
+            <h1 style="font-size: 3.5rem; font-weight: 800; margin: 1.5rem 0; line-height: 1.1;">Săn Deal Hời - <br/>Chăm Sóc Sức Khỏe Vàng</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 2.5rem; line-height: 1.6;">Giảm giá lên đến 50% cho hàng ngàn sản phẩm chăm sóc sức khỏe, vitamin và thiết bị y tế gia đình.</p>
+            <div style="display: flex; gap: 1rem;">
+                <a href="#flash-sale" style="background: white; color: #0d6849; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">Săn Deal Ngay</a>
+                <a href="#coupons" style="background: rgba(255,255,255,0.2); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(4px);">Nhận Mã Giảm Giá</a>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 
-<div class="container" style="max-width: 1200px; margin: 4rem auto; padding: 0 1.5rem; text-align: center;">
-    <div style="background: white; padding: 4rem; border-radius: 20px; box-shadow: var(--shadow-md);">
-        <i data-lucide="ticket" style="width: 64px; height: 64px; color: var(--primary-green-dark); margin-bottom: 2rem;"></i>
-        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">Coming Soon!</h2>
-        <p style="color: var(--light-text); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">We're currently preparing some amazing deals just for you. Check back soon to save big on your favorite pharmacy items.</p>
-        <div style="margin-top: 3rem;">
-            <a href="/Shop" class="btn-primary">Browse Shop</a>
+<div class="nav-container" style="padding: 4rem 0;">
+    <!-- Flash Sale Section -->
+    <div id="flash-sale" style="margin-bottom: 5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem;">
+            <div>
+                <h2 style="font-size: 2rem; font-weight: 800; color: var(--dark-text); display: flex; align-items: center; gap: 1rem;">
+                    <i data-lucide="zap" style="fill: #f59e0b; color: #f59e0b;"></i> Flash Sale Cuối Tuần
+                </h2>
+                <p style="color: var(--light-text); margin-top: 0.5rem;">Kết thúc sau: <span style="color: #ef4444; font-weight: 700;">08:45:22</span></p>
+            </div>
+            <a href="/Shop" style="color: var(--primary-green-dark); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">Xem tất cả <i data-lucide="arrow-right" style="width: 18px;"></i></a>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+            @for(int i=1; i<=4; i++) {
+                <div style="background: white; border-radius: 20px; border: 1px solid var(--border-color); overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="position: relative;">
+                        <span style="position: absolute; top: 1rem; left: 1rem; background: #ef4444; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 800; font-size: 0.85rem;">-@(i*10)%</span>
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=600" style="width: 100%; height: 240px; object-fit: cover;" />
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <span style="color: var(--light-text); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Dược Phẩm Hoa Linh</span>
+                        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--dark-text); margin: 0.5rem 0;">Thực phẩm bảo vệ sức khỏe Vitamin C 1000mg</h3>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0;">
+                            <span style="font-size: 1.25rem; font-weight: 800; color: #ef4444;">189.000đ</span>
+                            <span style="font-size: 0.95rem; color: var(--light-text); text-decoration: line-through;">250.000đ</span>
+                        </div>
+                        <div style="background: #fee2e2; height: 8px; border-radius: 4px; position: relative; margin-bottom: 1.5rem;">
+                            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 65%; background: #ef4444; border-radius: 4px;"></div>
+                            <span style="position: absolute; right: 0; top: -1.25rem; font-size: 0.75rem; color: #ef4444; font-weight: 600;">Đã bán 65%</span>
+                        </div>
+                        <button onclick="checkAuthAndAddToCart(1)" style="width: 100%; padding: 0.8rem; background: var(--primary-green-dark); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Mua Ngay</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Coupons Section -->
+    <div id="coupons" style="margin-bottom: 5rem;">
+        <h2 style="font-size: 2rem; font-weight: 800; color: var(--dark-text); margin-bottom: 2.5rem; text-align: center;">Mã Giảm Giá Độc Quyền</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+            <div style="background: #fff; border: 2px dashed #0d6849; border-radius: 16px; display: flex; overflow: hidden; position: relative;">
+                <div style="background: #0d6849; color: white; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+                    <span style="font-size: 1.5rem; font-weight: 800;">50K</span>
+                    <span style="font-size: 0.75rem; opacity: 0.8; text-transform: uppercase;">Giảm</span>
+                </div>
+                <div style="padding: 1.5rem; flex: 1;">
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700;">Cho đơn hàng từ 500K</h4>
+                    <p style="font-size: 0.85rem; color: var(--light-text); margin: 0.5rem 0 1rem;">Hạn dùng: 31/05/2024</p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" value="PHARMA50" readonly style="flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: monospace; font-weight: 700; text-align: center; background: #f8fafc;" />
+                        <button style="background: var(--primary-green-dark); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">Sao chép</button>
+                    </div>
+                </div>
+                <div style="position: absolute; top: -10px; right: 110px; width: 20px; height: 20px; background: #f4f7f6; border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: -10px; right: 110px; width: 20px; height: 20px; background: #f4f7f6; border-radius: 50%;"></div>
+            </div>
+            
+            <div style="background: #fff; border: 2px dashed #0d6849; border-radius: 16px; display: flex; overflow: hidden; position: relative;">
+                <div style="background: #fbbf24; color: #78350f; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+                    <span style="font-size: 1.5rem; font-weight: 800;">FREE</span>
+                    <span style="font-size: 0.75rem; opacity: 0.8; text-transform: uppercase;">Ship</span>
+                </div>
+                <div style="padding: 1.5rem; flex: 1;">
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700;">Đơn hàng từ 300K</h4>
+                    <p style="font-size: 0.85rem; color: var(--light-text); margin: 0.5rem 0 1rem;">Áp dụng toàn quốc</p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" value="FREESHIP" readonly style="flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: monospace; font-weight: 700; text-align: center; background: #f8fafc;" />
+                        <button style="background: var(--primary-green-dark); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">Sao chép</button>
+                    </div>
+                </div>
+                <div style="position: absolute; top: -10px; right: 110px; width: 20px; height: 20px; background: #f4f7f6; border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: -10px; right: 110px; width: 20px; height: 20px; background: #f4f7f6; border-radius: 50%;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Promotion Banners -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div style="height: 250px; background: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000') center; background-size: cover; border-radius: 24px; display: flex; align-items: center; padding: 3rem; color: white; position: relative;">
+            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); border-radius: 24px;"></div>
+            <div style="position: relative; z-index: 1;">
+                <h3 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1rem;">Mẹ & Bé - Trọn Gói An Tâm</h3>
+                <p style="margin-bottom: 2rem; opacity: 0.9;">Ưu đãi quà tặng đặc biệt cho đơn hàng trên 1 triệu.</p>
+                <a href="/Shop" style="color: white; font-weight: 700; text-decoration: none; border-bottom: 2px solid white;">Xem danh mục</a>
+            </div>
+        </div>
+        <div style="height: 250px; background: url('https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?auto=format&fit=crop&q=80&w=1000') center; background-size: cover; border-radius: 24px; display: flex; align-items: center; padding: 3rem; color: white; position: relative;">
+            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 24px;"></div>
+            <div style="position: relative; z-index: 1;">
+                <h3 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1rem;">Thiết Bị Y Tế Gia Đình</h3>
+                <p style="margin-bottom: 2rem; opacity: 0.9;">Máy đo huyết áp, máy tiểu đường giảm đến 30%.</p>
+                <a href="/Shop" style="color: white; font-weight: 700; text-decoration: none; border-bottom: 2px solid white;">Xem danh mục</a>
+            </div>
         </div>
     </div>
 </div>

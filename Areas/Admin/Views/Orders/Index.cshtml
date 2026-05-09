@@ -3,47 +3,82 @@
     ViewData["Title"] = "Quản lý hóa đơn";
 }
 
-<div style="background: white; border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden;">
-    <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #f8f9fa, #ffffff);">
+<div class="admin-card">
+    <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #f8f9fa, #ffffff); flex-wrap: wrap; gap: 1rem;">
         <div>
             <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--dark-text); margin-bottom: 0.25rem;">@ViewData["Title"]</h2>
             <p style="color: var(--light-text); font-size: 0.9rem; margin: 0;">Danh sách các đơn hàng từ hệ thống</p>
         </div>
         <div style="display: flex; gap: 1rem;">
-            <button class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem;">
-                <i data-lucide="download" style="width: 18px; height: 18px;"></i> Xuất báo cáo
-            </button>
+            <div style="position: relative; display: inline-block;">
+                <button class="btn-secondary" id="exportBtn" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem;">
+                    <i data-lucide="download" style="width: 18px; height: 18px;"></i> Xuất báo cáo
+                    <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </button>
+                <div id="exportMenu" style="display: none; position: absolute; right: 0; top: 110%; background: white; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 100; min-width: 160px; overflow: hidden;">
+                    <a href="/Admin/Orders/ExportExcel" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--dark-text); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                        <i data-lucide="file-spreadsheet" style="width: 18px; height: 18px; color: #166534;"></i> Xuất Excel
+                    </a>
+                    <a href="/Admin/Orders/ExportPdf" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: var(--dark-text); text-decoration: none; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: #991b1b;"></i> Xuất PDF
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div style="overflow-x: auto;">
+    <!-- Filter Bar (Responsive) -->
+    <div class="filter-bar">
+        <form method="get" class="filter-form">
+            <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                <i data-lucide="search" style="position: absolute; left: 1rem; color: var(--light-text); width: 16px;"></i>
+                <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Tìm theo mã ĐH, khách hàng hoặc SĐT..." style="width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 0.9rem;" />
+            </div>
+            <select name="status" style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: white; min-width: 180px; font-size: 0.9rem;">
+                <option value="">Tất cả trạng thái</option>
+                <option value="0" selected="@(ViewBag.StatusFilter != null && (int)ViewBag.StatusFilter == 0)">Chờ xử lý</option>
+                <option value="1" selected="@(ViewBag.StatusFilter != null && (int)ViewBag.StatusFilter == 1)">Đã xác nhận</option>
+                <option value="2" selected="@(ViewBag.StatusFilter != null && (int)ViewBag.StatusFilter == 2)">Đang giao</option>
+                <option value="3" selected="@(ViewBag.StatusFilter != null && (int)ViewBag.StatusFilter == 3)">Thành công</option>
+                <option value="4" selected="@(ViewBag.StatusFilter != null && (int)ViewBag.StatusFilter == 4)">Đã hủy</option>
+            </select>
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" style="flex: 1; padding: 0.65rem 1.5rem; background: var(--bg-light); color: var(--primary-green-dark); border: 1px solid var(--primary-green-dark); border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; white-space: nowrap;">Lọc</button>
+                <a href="/Admin/Orders" style="padding: 0.65rem; color: var(--light-text); display: flex; align-items: center;" title="Xóa bộ lọc">
+                    <i data-lucide="rotate-ccw" style="width: 18px;"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead>
                 <tr style="background: #f8fafc; border-bottom: 2px solid var(--border-color);">
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Mã ĐH</th>
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Khách hàng</th>
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Ngày đặt</th>
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Tổng tiền</th>
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Trạng thái</th>
-                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; text-align: right;">Thao tác</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap;">Mã ĐH</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap;">Khách hàng</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap;">Ngày đặt</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap;">Tổng tiền</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap;">Trạng thái</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; text-align: right; white-space: nowrap;">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr style="border-bottom: 1px solid var(--border-color); transition: all 0.2s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
-                        <td style="padding: 1.25rem 2rem; font-weight: 600; color: var(--primary-green-dark);">#@item.Id.ToString("D5")</td>
-                        <td style="padding: 1.25rem 2rem;">
+                        <td style="padding: 1.25rem 2rem; font-weight: 600; color: var(--primary-green-dark); white-space: nowrap;">#@item.Id.ToString("D5")</td>
+                        <td style="padding: 1.25rem 2rem; white-space: nowrap;">
                             <div style="font-weight: 600; color: var(--dark-text);">@item.Customer.FullName</div>
                             <div style="font-size: 0.8rem; color: var(--light-text);">@item.Phone</div>
                         </td>
-                        <td style="padding: 1.25rem 2rem; color: var(--dark-text);">
+                        <td style="padding: 1.25rem 2rem; color: var(--dark-text); white-space: nowrap;">
                             @item.OrderDate.ToString("dd/MM/yyyy HH:mm")
                         </td>
-                        <td style="padding: 1.25rem 2rem; font-weight: 700; color: var(--dark-text);">
+                        <td style="padding: 1.25rem 2rem; font-weight: 700; color: var(--dark-text); white-space: nowrap;">
                             @item.TotalAmount.ToString("N0") <span style="font-size: 0.8em; vertical-align: middle;">₫</span>
                         </td>
-                        <td style="padding: 1.25rem 2rem;">
+                        <td style="padding: 1.25rem 2rem; white-space: nowrap;">
                             @{
                                 var statusStyle = item.Status switch
                                 {
@@ -83,20 +118,86 @@
             </tbody>
         </table>
     </div>
-    
-    <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
-        <span style="font-size: 0.9rem; color: var(--light-text);">Hiển thị @Model.Count() đơn hàng</span>
-        <div style="display: flex; gap: 0.5rem;">
-            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Trước</button>
-            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary-green-dark); color: white; border-color: var(--primary-green-dark);">1</button>
-            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Sau</button>
+
+    <!-- Enhanced Pagination (Responsive) -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 0.5rem; background: #f8f9fa; flex-wrap: wrap;">
+            @* First Page *@
+            @if (ViewBag.CurrentPage > 3)
+            {
+                <a href="@Url.Action("Index", new { page = 1, searchTerm = ViewBag.SearchTerm, status = ViewBag.StatusFilter })" 
+                   style="padding: 0.5rem 0.75rem; background: white; border: 1px solid var(--border-color); border-radius: 6px; color: var(--dark-text); text-decoration: none;" title="Trang đầu">
+                    <i data-lucide="chevrons-left" style="width: 16px;"></i>
+                </a>
+            }
+
+            @* Previous Page *@
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, searchTerm = ViewBag.SearchTerm, status = ViewBag.StatusFilter })" 
+                   style="padding: 0.5rem 0.75rem; background: white; border: 1px solid var(--border-color); border-radius: 6px; color: var(--dark-text); text-decoration: none;">
+                    <i data-lucide="chevron-left" style="width: 16px;"></i>
+                </a>
+            }
+
+            @* Page Numbers with Ellipsis *@
+            @{
+                int startPage = Math.Max(1, ViewBag.CurrentPage - 1);
+                int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 1);
+
+                if (startPage > 1)
+                {
+                    <span style="color: var(--light-text); padding: 0 0.5rem;">...</span>
+                }
+
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    <a href="@Url.Action("Index", new { page = i, searchTerm = ViewBag.SearchTerm, status = ViewBag.StatusFilter })" 
+                       style="padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; min-width: 40px; text-align: center;
+                              @(i == ViewBag.CurrentPage ? "background: var(--primary-green-dark); color: white;" : "background: white; border: 1px solid var(--border-color); color: var(--dark-text);")">
+                        @i
+                    </a>
+                }
+
+                if (endPage < ViewBag.TotalPages)
+                {
+                    <span style="color: var(--light-text); padding: 0 0.5rem;">...</span>
+                }
+            }
+
+            @* Next Page *@
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, searchTerm = ViewBag.SearchTerm, status = ViewBag.StatusFilter })" 
+                   style="padding: 0.5rem 0.75rem; background: white; border: 1px solid var(--border-color); border-radius: 6px; color: var(--dark-text); text-decoration: none;">
+                    <i data-lucide="chevron-right" style="width: 16px;"></i>
+                </a>
+            }
+
+            @* Last Page *@
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
+            {
+                <a href="@Url.Action("Index", new { page = ViewBag.TotalPages, searchTerm = ViewBag.SearchTerm, status = ViewBag.StatusFilter })" 
+                   style="padding: 0.5rem 0.75rem; background: white; border: 1px solid var(--border-color); border-radius: 6px; color: var(--dark-text); text-decoration: none;" title="Trang cuối">
+                    <i data-lucide="chevrons-right" style="width: 16px;"></i>
+                </a>
+            }
         </div>
-    </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div style="padding: 4rem; text-align: center; color: var(--light-text); background: white;">
+            <i data-lucide="shopping-cart" style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p>Không tìm thấy hóa đơn nào khớp với tìm kiếm.</p>
+        </div>
+    }
 </div>
 
 <!-- Simple Status Update Modal -->
 <div id="statusModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-    <div style="background: white; border-radius: 16px; width: 400px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+    <div style="background: white; border-radius: 16px; width: 90%; max-width: 400px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
         <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--dark-text);">Cập nhật trạng thái đơn hàng</h3>
         <form action="/Admin/Orders/UpdateStatus" method="post" id="statusForm">
             <input type="hidden" name="id" id="modalOrderId" />
@@ -119,6 +220,19 @@
 </div>
 
 <script>
+    // Export dropdown logic
+    const exportBtn = document.getElementById('exportBtn');
+    const exportMenu = document.getElementById('exportMenu');
+
+    exportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportMenu.style.display = exportMenu.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', () => {
+        exportMenu.style.display = 'none';
+    });
+
     function openStatusModal(id, currentStatus) {
         document.getElementById('modalOrderId').value = id;
         document.getElementById('modalStatusSelect').value = currentStatus;

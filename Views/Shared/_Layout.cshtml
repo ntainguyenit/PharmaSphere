@@ -138,7 +138,55 @@
         {
             <text>showNotification('error', 'Lỗi', '@TempData["Error"]');</text>
         }
+
+        // Global Auth Check for Cart
+        const isAuthenticated = @(User.Identity.IsAuthenticated.ToString().ToLower());
+        
+        function checkAuthAndAddToCart(productId) {
+            if (!isAuthenticated) {
+                document.getElementById('authModal').style.display = 'flex';
+                return;
+            }
+            window.location.href = `/Cart/Add/${productId}`;
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target == modal) {
+                closeAuthModal();
+            }
+        }
     </script>
+
+    <!-- Auth Required Modal -->
+    <div id="authModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px); animation: fadeIn 0.3s ease;">
+        <div style="background: white; border-radius: 24px; width: 450px; max-width: 90%; padding: 2.5rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative;">
+            <button onclick="closeAuthModal()" style="position: absolute; right: 1.5rem; top: 1.5rem; background: none; border: none; cursor: pointer; color: var(--light-text);">
+                <i data-lucide="x" style="width: 24px; height: 24px;"></i>
+            </button>
+            <div style="width: 80px; height: 80px; background: var(--soft-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--primary-green-dark);">
+                <i data-lucide="user-lock" style="width: 40px; height: 40px;"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--dark-text); margin-bottom: 1rem;">Cần đăng nhập</h3>
+            <p style="color: var(--light-text); line-height: 1.6; margin-bottom: 2rem;">Vui lòng Đăng nhập hoặc Đăng ký tài khoản để tiếp tục thực hiện thao tác!</p>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <a href="/Account/Login" style="background: var(--primary-green-dark); color: white; padding: 1rem; border-radius: 12px; text-decoration: none; font-weight: 700; transition: all 0.2s;" onmouseover="this.style.background='#0a523a'" onmouseout="this.style.background='var(--primary-green-dark)'">Đăng nhập ngay</a>
+                <a href="/Account/Register" style="background: white; color: var(--primary-green-dark); padding: 1rem; border-radius: 12px; text-decoration: none; font-weight: 700; border: 2px solid var(--primary-green-dark); transition: all 0.2s;" onmouseover="this.style.background='var(--soft-green)'" onmouseout="this.style.background='white'">Chưa có tài khoản? Đăng ký</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @@keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

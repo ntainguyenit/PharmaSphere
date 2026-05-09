@@ -111,13 +111,10 @@
                         }
                         else
                         {
-                            <form action="/Cart/Add" method="post">
-                                <input type="hidden" name="id" value="@product.Id" />
-                                <button type="submit" class="btn-add-cart">
-                                    <i data-lucide="shopping-cart"></i>
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
+                            <button type="button" class="btn-add-cart" onclick="checkAuthAndAddToCart(@product.Id)">
+                                <i data-lucide="shopping-cart"></i>
+                                Thêm vào giỏ
+                            </button>
                         }
                     </div>
                 </div>

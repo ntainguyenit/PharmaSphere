@@ -79,7 +79,7 @@
                                 <span style="color: var(--light-text); margin-left: 5px;">(@product.Rating)</span>
                             </div>
                             <div class="product-price">@string.Format("{0:N0}₫", product.Price)</div>
-                            <button class="btn-add-cart">
+                            <button class="btn-add-cart" onclick="checkAuthAndAddToCart(@product.Id)">
                                 <i data-lucide="shopping-cart"></i>
                                 Thêm vào giỏ
                             </button>

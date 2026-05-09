@@ -1,128 +1,134 @@
 @model IEnumerable<PharmaSphere.Models.Product>
+@using PharmaSphere.Models
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
 }
 
-<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+<div class="admin-header" style="position: static; margin-bottom: 2rem;"> @* Not sticky per user request *@
     <div>
-        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Danh sách sản phẩm</h1>
-        <p style="color: var(--light-text);">Quản lý danh mục thuốc và thiết bị y tế trong hệ thống.</p>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--dark-text); margin: 0;">@ViewData["Title"]</h1>
+        <p style="color: var(--light-text); margin: 0.25rem 0 0;">Danh sách sản phẩm hiện có trong hệ thống</p>
     </div>
-    <a href="/Admin/Products/Create" style="padding: 0.75rem 1.5rem; background: #064e3b; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-        <i data-lucide="plus" style="width: 18px;"></i>
-        Thêm sản phẩm mới
+    <a href="/Admin/Products/Create" class="btn-primary" style="background: var(--primary-green-dark); border-radius: 8px; padding: 0.75rem 1.5rem;">
+        <i data-lucide="plus" style="width: 20px;"></i> Thêm sản phẩm mới
     </a>
 </div>
 
-<!-- Filter Bar -->
-<div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: var(--shadow-sm); display: flex; gap: 1rem; align-items: center;">
-    <form method="get" style="display: flex; gap: 1rem; flex: 1;">
-        <div style="position: relative; flex: 1;">
-            <i data-lucide="search" style="position: absolute; left: 1rem; top: 1rem; color: var(--light-text); width: 18px;"></i>
+<!-- Filter Bar (Responsive) -->
+<div class="filter-bar admin-card" style="margin-bottom: 2rem;">
+    <form method="get" class="filter-form">
+        <div style="position: relative; flex: 1; display: flex; align-items: center;">
+            <i data-lucide="search" style="position: absolute; left: 1rem; color: var(--light-text); width: 18px;"></i>
             <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Tìm theo tên hoặc mô tả..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" />
         </div>
         <select name="categoryId" style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: white; min-width: 200px;">
             <option value="">Tất cả danh mục</option>
-            @foreach (var cat in ViewBag.Categories)
+            @if (ViewBag.Categories != null)
             {
-                <option value="@cat.Id" selected="@(ViewBag.CategoryId == cat.Id)">@cat.Name</option>
+                foreach (var cat in (IEnumerable<Category>)ViewBag.Categories)
+                {
+                    <option value="@cat.Id" selected="@(ViewBag.CategoryId != null && (int)ViewBag.CategoryId == cat.Id)">@cat.Name</option>
+                }
             }
         </select>
-        <button type="submit" style="padding: 0.75rem 2rem; background: var(--bg-light); color: var(--primary-green-dark); border: 1px solid var(--primary-green-dark); border-radius: 8px; font-weight: 600; cursor: pointer;">Lọc</button>
-        <a href="/Admin/Products" style="padding: 0.75rem; color: var(--light-text); display: flex; align-items: center;" title="Xóa bộ lọc">
-            <i data-lucide="rotate-ccw" style="width: 18px;"></i>
-        </a>
+        <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" style="flex: 1; padding: 0.75rem 1.5rem; background: var(--soft-green); color: var(--primary-green-dark); border: 1px solid var(--primary-green-dark); border-radius: 8px; font-weight: 600; cursor: pointer;">Lọc</button>
+            <a href="/Admin/Products" style="padding: 0.75rem; color: var(--light-text); display: flex; align-items: center;" title="Xóa bộ lọc">
+                <i data-lucide="rotate-ccw" style="width: 20px;"></i>
+            </a>
+        </div>
     </form>
 </div>
 
-<!-- Product Table -->
-<div style="background: white; border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 2rem;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead style="background: var(--bg-light); border-bottom: 1px solid var(--border-color);">
-            <tr>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Sản phẩm</th>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Danh mục</th>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Giá bán</th>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Tồn kho</th>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Trạng thái</th>
-                <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; text-align: center;">Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
-                    <td style="padding: 1.25rem 1.5rem;">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <img src="@item.ImageUrl" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color);" onerror="this.src='/img/placeholder-pill.png'" />
-                            <div>
-                                <div style="font-weight: 600; color: var(--dark-text);">@item.Name</div>
-                                <div style="font-size: 0.75rem; color: var(--light-text);">@item.Brand?.Name</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td style="padding: 1.25rem 1.5rem;">
-                        <span style="padding: 0.25rem 0.75rem; background: var(--soft-green); color: var(--primary-green-dark); border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
-                            @item.Category?.Name
-                        </span>
-                    </td>
-                    <td style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--primary-green-dark);">
-                        @item.Price.ToString("N0") đ
-                    </td>
-                    <td style="padding: 1.25rem 1.5rem;">
-                        <div style="font-weight: 600; color: @(item.Stock < 20 ? "var(--accent-red)" : "var(--dark-text)")">
-                            @item.Stock
-                        </div>
-                    </td>
-                    <td style="padding: 1.25rem 1.5rem;">
-                        @switch (item.Status)
-                        {
-                            case ProductStatus.InStock:
-                                <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #10b981; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #ecfdf5; border-radius: 20px;">
-                                    <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></span> Còn hàng
-                                </span>
-                                break;
-                            case ProductStatus.OutOfStock:
-                                <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #ef4444; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fef2f2; border-radius: 20px;">
-                                    <span style="width: 6px; height: 6px; background: #ef4444; border-radius: 50%;"></span> Hết hàng
-                                </span>
-                                break;
-                            case ProductStatus.ComingSoon:
-                                <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #f59e0b; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fffbeb; border-radius: 20px;">
-                                    <span style="width: 6px; height: 6px; background: #f59e0b; border-radius: 50%;"></span> Sắp về hàng
-                                </span>
-                                break;
-                            case ProductStatus.Discontinued:
-                                <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #6b7280; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #f3f4f6; border-radius: 20px;">
-                                    <span style="width: 6px; height: 6px; background: #6b7280; border-radius: 50%;"></span> Ngừng kinh doanh
-                                </span>
-                                break;
-                            case ProductStatus.OnSale:
-                                <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #ec4899; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fdf2f8; border-radius: 20px;">
-                                    <span style="width: 6px; height: 6px; background: #ec4899; border-radius: 50%;"></span> Khuyến mãi
-                                </span>
-                                break;
-                        }
-                    </td>
-                    <td style="padding: 1.25rem 1.5rem;">
-                        <div style="display: flex; justify-content: center; gap: 0.75rem;">
-                            <a href="/Admin/Products/Edit/@item.Id" style="color: #3b82f6;" title="Chỉnh sửa">
-                                <i data-lucide="edit-3" style="width: 18px;"></i>
-                            </a>
-                            <button type="button" onclick="showDeleteModal(@item.Id, '@item.Name')" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 0;">
-                                <i data-lucide="trash-2" style="width: 18px;"></i>
-                            </button>
-                        </div>
-                    </td>
+<div class="admin-card">
+    <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;"> @* Enable vertical scroll with sticky header *@
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left;">
+            <thead style="position: sticky; top: 0; z-index: 10; background: var(--bg-light); box-shadow: 0 1px 0 var(--border-color);">
+                <tr>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem;">Sản phẩm</th>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; white-space: nowrap;">Danh mục</th>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; white-space: nowrap;">Giá bán</th>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; white-space: nowrap;">Tồn kho</th>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; white-space: nowrap;">Trạng thái</th>
+                    <th style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--dark-text); font-size: 0.9rem; text-align: center; white-space: nowrap;">Thao tác</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.25rem 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <img src="@item.ImageUrl" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color);" onerror="this.src='/img/placeholder-pill.png'" />
+                                <div>
+                                    <div style="font-weight: 600; color: var(--dark-text); max-width: 250px; overflow: hidden; text-overflow: ellipsis;">@item.Name</div>
+                                    <div style="font-size: 0.75rem; color: var(--light-text);">@item.Brand?.Name</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 1.25rem 1.5rem; white-space: nowrap;">
+                            <span style="padding: 0.25rem 0.75rem; background: var(--soft-green); color: var(--primary-green-dark); border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                                @item.Category?.Name
+                            </span>
+                        </td>
+                        <td style="padding: 1.25rem 1.5rem; font-weight: 700; color: var(--primary-green-dark); white-space: nowrap;">
+                            @item.Price.ToString("N0") đ
+                        </td>
+                        <td style="padding: 1.25rem 1.5rem; white-space: nowrap;">
+                            <div style="font-weight: 600; color: @(item.Stock < 20 ? "var(--accent-red)" : "var(--dark-text)")">
+                                @item.Stock
+                            </div>
+                        </td>
+                        <td style="padding: 1.25rem 1.5rem; white-space: nowrap;">
+                            @switch (item.Status)
+                            {
+                                case ProductStatus.InStock:
+                                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #10b981; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #ecfdf5; border-radius: 20px;">
+                                        <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></span> Còn hàng
+                                    </span>
+                                    break;
+                                case ProductStatus.OutOfStock:
+                                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #ef4444; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fef2f2; border-radius: 20px;">
+                                        <span style="width: 6px; height: 6px; background: #ef4444; border-radius: 50%;"></span> Hết hàng
+                                    </span>
+                                    break;
+                                case ProductStatus.ComingSoon:
+                                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #f59e0b; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fffbeb; border-radius: 20px;">
+                                        <span style="width: 6px; height: 6px; background: #f59e0b; border-radius: 50%;"></span> Sắp về hàng
+                                    </span>
+                                    break;
+                                case ProductStatus.Discontinued:
+                                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #6b7280; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #f3f4f6; border-radius: 20px;">
+                                        <span style="width: 6px; height: 6px; background: #6b7280; border-radius: 50%;"></span> Ngừng kinh doanh
+                                    </span>
+                                    break;
+                                case ProductStatus.OnSale:
+                                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; color: #ec4899; font-size: 0.85rem; font-weight: 600; padding: 0.25rem 0.75rem; background: #fdf2f8; border-radius: 20px;">
+                                        <span style="width: 6px; height: 6px; background: #ec4899; border-radius: 50%;"></span> Khuyến mãi
+                                    </span>
+                                    break;
+                            }
+                        </td>
+                        <td style="padding: 1.25rem 1.5rem; white-space: nowrap;">
+                            <div style="display: flex; justify-content: center; gap: 0.75rem;">
+                                <a href="/Admin/Products/Edit/@item.Id" style="color: #3b82f6;" title="Chỉnh sửa">
+                                    <i data-lucide="edit-3" style="width: 18px;"></i>
+                                </a>
+                                <a href="/Admin/Products/Delete/@item.Id" style="color: var(--accent-red);" title="Xóa">
+                                    <i data-lucide="trash-2" style="width: 18px;"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Pagination -->
+    <!-- Enhanced Pagination (Responsive) -->
     @if (ViewBag.TotalPages > 1)
     {
-        <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 0.5rem;">
+        <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 0.5rem; background: #f8f9fa; flex-wrap: wrap;">
             @* First Page *@
             @if (ViewBag.CurrentPage > 3)
             {
@@ -143,8 +149,8 @@
 
             @* Page Numbers with Ellipsis *@
             @{
-                int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
-                int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+                int startPage = Math.Max(1, ViewBag.CurrentPage - 1);
+                int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 1);
 
                 if (startPage > 1)
                 {
@@ -176,7 +182,7 @@
             }
 
             @* Last Page *@
-            @if (ViewBag.CurrentPage < ViewBag.TotalPages - 2)
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
             {
                 <a href="@Url.Action("Index", new { page = ViewBag.TotalPages, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.CategoryId })" 
                    style="padding: 0.5rem 0.75rem; background: white; border: 1px solid var(--border-color); border-radius: 6px; color: var(--dark-text); text-decoration: none;" title="Trang cuối">
@@ -185,51 +191,4 @@
             }
         </div>
     }
-    
-    @if (!Model.Any())
-    {
-        <div style="padding: 4rem; text-align: center; color: var(--light-text);">
-            <i data-lucide="package-search" style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.5;"></i>
-            <p>Không tìm thấy sản phẩm nào khớp với tìm kiếm.</p>
-        </div>
-    }
 </div>
-
-<!-- Custom Delete Modal -->
-<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); max-width: 450px; width: 90%; text-align: center;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #fee2e2; border-radius: 50%; color: #ef4444; margin-bottom: 1.5rem;">
-            <i data-lucide="trash-2" style="width: 32px; height: 32px;"></i>
-        </div>
-        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Xác nhận xóa sản phẩm</h3>
-        <p style="color: var(--light-text); margin-bottom: 2rem; line-height: 1.5;">Bạn có chắc chắn muốn xóa sản phẩm <strong id="deleteProductName" style="color: var(--dark-text);"></strong> này không?</p>
-        
-        <form id="deleteForm" method="post" action="/Admin/Products/Delete">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="id" id="deleteProductId" />
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button type="button" onclick="hideDeleteModal()" style="padding: 0.75rem 1.5rem; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 8px; font-weight: 600; cursor: pointer;">Hủy bỏ</button>
-                <button type="submit" style="padding: 0.75rem 1.5rem; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Đồng ý xóa</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function showDeleteModal(id, name) {
-        document.getElementById('deleteProductId').value = id;
-        document.getElementById('deleteProductName').innerText = name;
-        document.getElementById('deleteModal').style.display = 'flex';
-    }
-
-    function hideDeleteModal() {
-        document.getElementById('deleteModal').style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('deleteModal');
-        if (event.target == modal) {
-            hideDeleteModal();
-        }
-    }
-</script>

@@ -116,6 +116,8 @@ body {
     top: 50%;
     transform: translateY(-50%);
     color: var(--light-text);
+    display: flex;
+    align-items: center;
 }
 
 .nav-menu {
@@ -464,11 +466,51 @@ body {
     margin-left: 260px;
     min-height: 100vh;
     padding: 2rem;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: calc(100% - 260px);
 }
 
 .sidebar.collapsed + .main-content {
     margin-left: 80px;
+    width: calc(100% - 80px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 1rem;
+    }
+    .admin-header {
+        margin: -1rem -1rem 1.5rem -1rem !important;
+        padding: 1rem !important;
+    }
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .admin-header .search-bar {
+        max-width: none;
+        width: 100%;
+    }
 }
 
 .sidebar-menu {
@@ -503,9 +545,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
+    background: var(--white);
     padding: 1rem 2rem;
     margin: -2rem -2rem 2rem -2rem;
     border-bottom: 1px solid var(--border-color);
@@ -606,6 +646,47 @@ footer {
 .notification-message {
     font-size: 0.85rem;
     color: #666;
+}
+/* Responsive Table & Filter */
+.admin-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.filter-bar {
+    padding: 1.25rem 2rem;
+    background: #fdfdfd;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filter-form {
+    display: flex;
+    gap: 1rem;
+    flex: 1;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .filter-bar {
+        padding: 1rem;
+    }
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-form select, .filter-form button {
+        width: 100%;
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 @keyframes slideIn {
