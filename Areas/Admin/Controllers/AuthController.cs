@@ -93,11 +93,11 @@ namespace PharmaSphere.Areas.Admin.Controllers
         /// </summary>
         /// <returns>A redirect to the admin login page.</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("AdminAuth");
-            return RedirectToAction("Login", "Auth", new { area = "Admin" });
+            TempData["Success"] = "Đã đăng xuất khỏi hệ thống quản trị.";
+            return Redirect("/Admin/Auth/Login");
         }
     }
 }

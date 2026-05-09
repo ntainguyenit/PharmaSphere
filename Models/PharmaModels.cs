@@ -65,6 +65,26 @@ namespace PharmaSphere.Models
         public int BrandId { get; set; }
         /// <summary>Gets or sets the brand navigation property.</summary>
         public virtual Brand Brand { get; set; }
+
+        /// <summary>Gets or sets the product status.</summary>
+        public ProductStatus Status { get; set; } = ProductStatus.InStock;
+    }
+
+    /// <summary>
+    /// Defines product statuses.
+    /// </summary>
+    public enum ProductStatus
+    {
+        /// <summary>Product is in stock and available.</summary>
+        InStock,
+        /// <summary>Product is out of stock.</summary>
+        OutOfStock,
+        /// <summary>Product is coming soon.</summary>
+        ComingSoon,
+        /// <summary>Product is discontinued.</summary>
+        Discontinued,
+        /// <summary>Product is on promotion.</summary>
+        OnSale
     }
 
     /// <summary>

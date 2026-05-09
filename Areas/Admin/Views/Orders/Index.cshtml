@@ -1,0 +1,139 @@
+@model IEnumerable<PharmaSphere.Models.Order>
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+}
+
+<div style="background: white; border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden;">
+    <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #f8f9fa, #ffffff);">
+        <div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--dark-text); margin-bottom: 0.25rem;">@ViewData["Title"]</h2>
+            <p style="color: var(--light-text); font-size: 0.9rem; margin: 0;">Danh sách các đơn hàng từ hệ thống</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem;">
+                <i data-lucide="download" style="width: 18px; height: 18px;"></i> Xuất báo cáo
+            </button>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #f8fafc; border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Mã ĐH</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Khách hàng</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Ngày đặt</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Tổng tiền</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Trạng thái</th>
+                    <th style="padding: 1.25rem 2rem; font-weight: 600; color: var(--light-text); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; text-align: right;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr style="border-bottom: 1px solid var(--border-color); transition: all 0.2s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.25rem 2rem; font-weight: 600; color: var(--primary-green-dark);">#@item.Id.ToString("D5")</td>
+                        <td style="padding: 1.25rem 2rem;">
+                            <div style="font-weight: 600; color: var(--dark-text);">@item.Customer.FullName</div>
+                            <div style="font-size: 0.8rem; color: var(--light-text);">@item.Phone</div>
+                        </td>
+                        <td style="padding: 1.25rem 2rem; color: var(--dark-text);">
+                            @item.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                        <td style="padding: 1.25rem 2rem; font-weight: 700; color: var(--dark-text);">
+                            @item.TotalAmount.ToString("N0") <span style="font-size: 0.8em; vertical-align: middle;">₫</span>
+                        </td>
+                        <td style="padding: 1.25rem 2rem;">
+                            @{
+                                var statusStyle = item.Status switch
+                                {
+                                    OrderStatus.Pending => "background: #fff7ed; color: #9a3412; border: 1px solid #ffedd5;",
+                                    OrderStatus.Confirmed => "background: #f0f9ff; color: #075985; border: 1px solid #e0f2fe;",
+                                    OrderStatus.Shipping => "background: #fdf4ff; color: #86198f; border: 1px solid #fae8ff;",
+                                    OrderStatus.Delivered => "background: #f0fdf4; color: #166534; border: 1px solid #dcfce7;",
+                                    OrderStatus.Cancelled => "background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2;",
+                                    _ => "background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;"
+                                };
+                                var statusText = item.Status switch
+                                {
+                                    OrderStatus.Pending => "Chờ xử lý",
+                                    OrderStatus.Confirmed => "Đã xác nhận",
+                                    OrderStatus.Shipping => "Đang giao",
+                                    OrderStatus.Delivered => "Thành công",
+                                    OrderStatus.Cancelled => "Đã hủy",
+                                    _ => item.Status.ToString()
+                                };
+                            }
+                            <span style="padding: 0.4rem 0.8rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; @statusStyle">
+                                @statusText
+                            </span>
+                        </td>
+                        <td style="padding: 1.25rem 2rem; text-align: right;">
+                            <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                                <a href="/Admin/Orders/Details/@item.Id" title="Xem chi tiết" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.color='var(--primary-green)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#64748b'">
+                                    <i data-lucide="eye" style="width: 18px; height: 18px;"></i>
+                                </a>
+                                <button onclick="openStatusModal(@item.Id, @((int)item.Status))" title="Cập nhật trạng thái" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.color='var(--primary-green)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#64748b'">
+                                    <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
+        <span style="font-size: 0.9rem; color: var(--light-text);">Hiển thị @Model.Count() đơn hàng</span>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Trước</button>
+            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary-green-dark); color: white; border-color: var(--primary-green-dark);">1</button>
+            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Sau</button>
+        </div>
+    </div>
+</div>
+
+<!-- Simple Status Update Modal -->
+<div id="statusModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div style="background: white; border-radius: 16px; width: 400px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--dark-text);">Cập nhật trạng thái đơn hàng</h3>
+        <form action="/Admin/Orders/UpdateStatus" method="post" id="statusForm">
+            <input type="hidden" name="id" id="modalOrderId" />
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-text);">Chọn trạng thái mới:</label>
+                <select name="status" id="modalStatusSelect" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-green)'" onblur="this.style.borderColor='#e2e8f0'">
+                    <option value="0">Chờ xử lý</option>
+                    <option value="1">Đã xác nhận</option>
+                    <option value="2">Đang giao</option>
+                    <option value="3">Thành công</option>
+                    <option value="4">Đã hủy</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" onclick="closeStatusModal()" style="padding: 0.75rem 1.5rem; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 600; color: #475569; cursor: pointer;">Hủy</button>
+                <button type="submit" style="padding: 0.75rem 1.5rem; background: var(--primary-green-dark); border: none; border-radius: 8px; font-weight: 600; color: white; cursor: pointer;">Cập nhật</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openStatusModal(id, currentStatus) {
+        document.getElementById('modalOrderId').value = id;
+        document.getElementById('modalStatusSelect').value = currentStatus;
+        document.getElementById('statusModal').style.display = 'flex';
+    }
+
+    function closeStatusModal() {
+        document.getElementById('statusModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        let modal = document.getElementById('statusModal');
+        if (event.target == modal) {
+            closeStatusModal();
+        }
+    }
+</script>

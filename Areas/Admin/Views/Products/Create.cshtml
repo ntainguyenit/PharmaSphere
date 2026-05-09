@@ -1,0 +1,107 @@
+@model PharmaSphere.Models.Product
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<div style="margin-bottom: 2rem;">
+    <a href="/Admin/Products" style="color: var(--light-text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; margin-bottom: 1rem;">
+        <i data-lucide="arrow-left" style="width: 16px;"></i> Quay lại danh sách
+    </a>
+    <h1 style="font-size: 2rem; font-weight: 700;">Thêm sản phẩm</h1>
+</div>
+
+<div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: var(--shadow-sm); max-width: 800px;">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 1.5rem;"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <label asp-for="Name" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Tên sản phẩm</label>
+                <input asp-for="Name" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="VD: Panadol Extra" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="CategoryId" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Danh mục</label>
+                <select asp-for="CategoryId" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: white;">
+                    @foreach (var cat in ViewBag.Categories)
+                    {
+                        <option value="@cat.Id">@cat.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <label asp-for="BrandId" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Thương hiệu</label>
+                <select asp-for="BrandId" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: white;">
+                    @foreach (var brand in ViewBag.Brands)
+                    {
+                        <option value="@brand.Id">@brand.Name</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label asp-for="Status" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Trạng thái</label>
+                <select asp-for="Status" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: white;">
+                    <option value="0">Còn hàng</option>
+                    <option value="1">Hết hàng</option>
+                    <option value="2">Sắp về hàng</option>
+                    <option value="3">Ngừng kinh doanh</option>
+                    <option value="4">Khuyến mãi</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <label asp-for="Price" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Giá bán (VNĐ)</label>
+                <input asp-for="Price" type="text" id="price-input" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="0" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Stock" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Số lượng tồn kho</label>
+                <input asp-for="Stock" type="number" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label asp-for="Description" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Mô tả sản phẩm</label>
+            <textarea asp-for="Description" rows="4" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-family: inherit;" placeholder="Nhập mô tả chi tiết về sản phẩm..."></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label asp-for="ImageUrl" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark-text);">Link hình ảnh</label>
+            <input asp-for="ImageUrl" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; outline: none;" placeholder="https://example.com/image.jpg" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <div style="display: flex; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+            <a href="/Admin/Products" style="padding: 0.75rem 2rem; background: var(--bg-light); color: var(--dark-text); border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid var(--border-color);">Hủy bỏ</a>
+            <button type="submit" style="padding: 0.75rem 2.5rem; background: #064e3b; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; flex: 1;">Lưu sản phẩm</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const priceInput = document.getElementById('price-input');
+    priceInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value) {
+            e.target.value = new Intl.NumberFormat('vi-VN').format(value);
+        } else {
+            e.target.value = '';
+        }
+    });
+
+    // Form submission: strip dots before sending
+    document.querySelector('form').addEventListener('submit', function() {
+        priceInput.value = priceInput.value.replace(/\./g, '');
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

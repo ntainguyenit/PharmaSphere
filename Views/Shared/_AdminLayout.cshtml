@@ -11,49 +11,52 @@
 </head>
 <body>
     <div class="admin-layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">Admin Panel</div>
+            @{
+                var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+            }
             <ul class="sidebar-menu">
-                <li class="sidebar-item active">
+                <li class="sidebar-item @(controller == "Admin" ? "active" : "")">
                     <a href="/Admin">
                         <i data-lucide="layout-dashboard"></i>
-                        Dashboard
+                        <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#">
+                <li class="sidebar-item @(controller == "Products" ? "active" : "")">
+                    <a href="/Admin/Products">
                         <i data-lucide="package"></i>
-                        Quản lý sản phẩm
+                        <span>Quản lý sản phẩm</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#">
+                <li class="sidebar-item @(controller == "Orders" ? "active" : "")">
+                    <a href="/Admin/Orders">
                         <i data-lucide="file-text"></i>
-                        Quản lý hóa đơn
+                        <span>Quản lý hóa đơn</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#">
+                <li class="sidebar-item @(controller == "Customers" ? "active" : "")">
+                    <a href="/Admin/Customers">
                         <i data-lucide="users"></i>
-                        Quản lý khách hàng
+                        <span>Quản lý khách hàng</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#">
+                <li class="sidebar-item @(controller == "Employees" ? "active" : "")">
+                    <a href="/Admin/Employees">
                         <i data-lucide="user-cog"></i>
-                        Quản lý nhân viên
+                        <span>Quản lý nhân viên</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#">
+                <li class="sidebar-item @(controller == "Reports" ? "active" : "")">
+                    <a href="/Admin/Reports">
                         <i data-lucide="bar-chart-2"></i>
-                        Thống kê
+                        <span>Thống kê</span>
                     </a>
                 </li>
-                <li style="margin-top: auto;">
-                    <a href="#" style="color: rgba(255,255,255,0.5);">
+                <li class="sidebar-item" style="margin-top: auto;">
+                    <a href="#">
                         <i data-lucide="settings"></i>
-                        Cài đặt
+                        <span>Cài đặt</span>
                     </a>
                 </li>
             </ul>
@@ -61,9 +64,14 @@
 
         <main class="main-content">
             <header class="admin-header">
-                <div class="search-bar" style="margin: 0; max-width: 400px;">
-                    <i data-lucide="search" class="search-icon"></i>
-                    <input type="text" placeholder="Tìm kiếm..." />
+                <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                    <button id="sidebar-toggle" style="background: none; border: none; cursor: pointer; color: var(--dark-text); padding: 0.5rem; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                        <i data-lucide="menu" style="width: 24px;"></i>
+                    </button>
+                    <div class="search-bar" style="margin: 0; max-width: 400px; flex: 1;">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm..." />
+                    </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1.5rem;">
                     <i data-lucide="bell" style="cursor: pointer; position: relative;">
@@ -72,7 +80,10 @@
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <div style="text-align: right;">
                             <div style="font-weight: 700; font-size: 0.9rem;">Nguyễn Văn A</div>
-                            <div style="font-size: 0.75rem; color: var(--light-text);">Pharmacist Lead</div>
+                            <form asp-area="Admin" asp-controller="Auth" asp-action="Logout" method="post" style="margin:0;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" style="background:none; border:none; color: var(--accent-red); cursor:pointer; font-size: 0.75rem; padding:0; font-weight:600;">Đăng xuất</button>
+                            </form>
                         </div>
                         <img src="https://i.pravatar.cc/150?u=admin" style="width: 40px; height: 40px; border-radius: 50%;" />
                     </div>
@@ -83,9 +94,74 @@
         </main>
     </div>
 
+    <!-- Notification Container -->
+    <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
     <script>
         lucide.createIcons();
+
+        // Sidebar Toggle Logic
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebar-toggle');
+        
+        // Restore state from localStorage
+        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+            sidebar.classList.add('collapsed');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        });
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `toast ${type}`;
+            notification.style.cssText = `
+                padding: 1rem 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+                border-left: 4px solid ${type === 'success' ? '#10b981' : '#ef4444'};
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideIn 0.3s ease-out;
+                min-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" style="color: ${type === 'success' ? '#10b981' : '#ef4444'}; width: 20px;"></i>
+                <span style="font-weight: 600; color: var(--dark-text);">${message}</span>
+            `;
+            
+            container.appendChild(notification);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(20px)';
+                notification.style.transition = 'all 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <text>showNotification('@TempData["Success"]', 'success');</text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <text>showNotification('@TempData["Error"]', 'error');</text>
+        }
     </script>
+    <style>
+        @@keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
