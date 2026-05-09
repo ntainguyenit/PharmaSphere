@@ -33,7 +33,7 @@ public class HomeController : Controller
         var featuredProducts = await _context.Products
             .Include(p => p.Brand)
             .OrderBy(p => p.Id)
-            .Take(8)
+            .Take(6)
             .ToListAsync();
         
         ViewBag.Categories = categories;
