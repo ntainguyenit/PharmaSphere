@@ -4,6 +4,7 @@ using PharmaSphere.Data;
 using PharmaSphere.Models;
 using System.Collections.Generic;
 using Bogus;
+using PharmaSphere;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,44 +64,8 @@ using (var scope = app.Services.CreateScope())
         cats[i].Name = names[i];
     }
 
-    // Seed Users (190 Customers, 10 Admins)
-    // Force reset to ensure exact requirements (IDs 1-190, 191-200)
-    if (!context.Users.Any(u => u.Username == "user1" && u.PasswordHash == "user"))
-    {
-        // Use raw SQL to reset identity and clear table
-        context.Database.ExecuteSqlRaw("DELETE FROM OrderItems; DELETE FROM Orders; DELETE FROM Users; DBCC CHECKIDENT ('Users', RESEED, 0);");
-        
-        var usersToSeed = new List<User>();
-
-        // 1-190: Customers (user1 to user190)
-        for (int i = 1; i <= 190; i++)
-        {
-            usersToSeed.Add(new User
-            {
-                Username = $"user{i}",
-                PasswordHash = "user",
-                FullName = $"Khách hàng {i}",
-                Email = $"user{i}@pharmasphere.com",
-                Role = UserRole.Customer
-            });
-        }
-
-        // 191-200: Admins (admin1 to admin10, with admin/admin)
-        for (int i = 1; i <= 10; i++)
-        {
-            usersToSeed.Add(new User
-            {
-                Username = i == 1 ? "admin" : $"admin{i}",
-                PasswordHash = "admin",
-                FullName = $"Quản trị viên {i}",
-                Email = $"admin{i}@pharmasphere.com",
-                Role = UserRole.Admin
-            });
-        }
-
-        context.Users.AddRange(usersToSeed);
-        context.SaveChanges();
-    }
+    // Seed Users (Realistic Vietnamese data)
+    DbInitializer.Seed(scope.ServiceProvider);
     // Seed Products (200 sample products with correct Vietnamese names)
     if (!context.Products.Any(p => p.Name.Contains("Sản phẩm")))
     {

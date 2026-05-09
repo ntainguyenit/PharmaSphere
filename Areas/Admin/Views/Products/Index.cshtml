@@ -4,15 +4,58 @@
     ViewData["Title"] = "Quản lý sản phẩm";
 }
 
-<div class="admin-header" style="position: static; margin-bottom: 2rem;"> @* Not sticky per user request *@
+<div class="admin-header" style="margin-bottom: 2rem;">
     <div>
         <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--dark-text); margin: 0;">@ViewData["Title"]</h1>
         <p style="color: var(--light-text); margin: 0.25rem 0 0;">Danh sách sản phẩm hiện có trong hệ thống</p>
     </div>
-    <a href="/Admin/Products/Create" class="btn-primary" style="background: var(--primary-green-dark); border-radius: 8px; padding: 0.75rem 1.5rem;">
+    <a href="/Admin/Products/Create" class="btn-primary" style="background: #064E3B; border-radius: 8px; padding: 0.75rem 1.5rem; border: none; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
         <i data-lucide="plus" style="width: 20px;"></i> Thêm sản phẩm mới
     </a>
 </div>
+
+<style>
+    /* Lock page scroll */
+    body {
+        overflow: hidden !important;
+    }
+
+    .main-content {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden !important;
+    }
+
+    .table-container-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-height: 0;
+    }
+
+    .table-responsive {
+        flex: 1;
+        overflow-y: auto !important;
+        max-height: none !important;
+    }
+    
+    /* Custom scrollbar for premium look */
+    .table-responsive::-webkit-scrollbar {
+        width: 8px;
+    }
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #999;
+    }
+</style>
 
 <!-- Filter Bar (Responsive) -->
 <div class="filter-bar admin-card" style="margin-bottom: 2rem;">
@@ -40,8 +83,8 @@
     </form>
 </div>
 
-<div class="admin-card">
-    <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;"> @* Enable vertical scroll with sticky header *@
+<div class="admin-card table-container-card">
+    <div class="table-responsive">
         <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left;">
             <thead style="position: sticky; top: 0; z-index: 10; background: var(--bg-light); box-shadow: 0 1px 0 var(--border-color);">
                 <tr>
