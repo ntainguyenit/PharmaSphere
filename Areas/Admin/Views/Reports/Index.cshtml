@@ -1,10 +1,177 @@
-<div style="padding: 4rem 2rem; text-align: center; background: white; border-radius: 16px; box-shadow: var(--shadow-sm); margin-top: 2rem;">
-    <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: var(--soft-green); border-radius: 50%; color: var(--primary-green-dark); margin-bottom: 1.5rem;">
-        <i data-lucide="bar-chart-3" style="width: 40px; height: 40px;"></i>
+@{
+    ViewData["Title"] = "Thống kê báo cáo";
+    Layout = "_AdminLayout";
+}
+
+<div style="padding: 2rem;">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-size: 1.875rem; font-weight: 700; color: var(--dark-text); margin-bottom: 0.5rem;">Thống kê & Báo cáo</h1>
+            <p style="color: #6b7280;">Theo dõi hiệu suất kinh doanh của nhà thuốc.</p>
+        </div>
+        <button id="export-btn" style="padding: 0.75rem 1.5rem; background: #064E3B; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="download" style="width: 18px;"></i>
+            Xuất báo cáo
+        </button>
     </div>
-    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--dark-text);">@ViewData["Title"]</h2>
-    <p style="color: var(--light-text); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">Hệ thống báo cáo chuyên sâu đang được tổng hợp dữ liệu.</p>
-    <div style="margin-top: 2.5rem;">
-        <a href="/Admin" style="padding: 0.75rem 2rem; background: var(--primary-green-dark); color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Quay lại Dashboard</a>
+
+    <!-- Charts Grid -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- Revenue Chart -->
+        <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark-text); margin-bottom: 1.5rem;">Doanh thu 7 ngày qua</h3>
+            <div style="height: 300px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Status Distribution -->
+        <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark-text); margin-bottom: 1.5rem;">Trạng thái đơn hàng</h3>
+            <div style="height: 300px;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+        <!-- Category Distribution -->
+        <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark-text); margin-bottom: 1.5rem;">Top danh mục</h3>
+            <div style="height: 300px;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Products Table -->
+        <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--dark-text); margin-bottom: 1.5rem;">Sản phẩm bán chạy</h3>
+            <table id="top-products-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 2px solid #f3f4f6;">
+                        <th style="padding: 1rem; color: #6b7280; font-weight: 600;">Sản phẩm</th>
+                        <th style="padding: 1rem; color: #6b7280; font-weight: 600;">Đã bán</th>
+                        <th style="padding: 1rem; color: #6b7280; font-weight: 600; text-align: right;">Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.TopProducts)
+                    {
+                        <tr style="border-bottom: 1px solid #f3f4f6;">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">@item.Name</td>
+                            <td style="padding: 1rem;">@item.Sold</td>
+                            <td style="padding: 1rem; text-align: right; font-weight: 700; color: var(--primary-green);">@item.Revenue.ToString("N0")đ</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Revenue Chart
+        const revCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revCtx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.RevenueLabels)),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: @Html.Raw(Json.Serialize(ViewBag.RevenueValues)),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Status Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.StatusLabels)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(ViewBag.StatusValues)),
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#6b7280'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                }
+            }
+        });
+
+        // Category Chart
+        const catCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(catCtx, {
+            type: 'polarArea',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.CategoryLabels)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(ViewBag.CategoryValues)),
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(245, 158, 11, 0.7)',
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(107, 114, 128, 0.7)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Export Functionality
+        document.getElementById('export-btn').addEventListener('click', function() {
+            let csv = [];
+            let rows = document.querySelectorAll("#top-products-table tr");
+            
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (let j = 0; j < cols.length; j++) {
+                    let text = cols[j].innerText.replace(/đ/g, '').replace(/,/g, '');
+                    row.push('"' + text + '"');
+                }
+                
+                csv.push(row.join(","));
+            }
+
+            let csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+            let downloadLink = document.createElement("a");
+            downloadLink.download = "BaoCaoThongKe_PharmaSphere.csv";
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            showNotification("Đã xuất báo cáo thành công!", "success");
+        });
+    </script>
+}

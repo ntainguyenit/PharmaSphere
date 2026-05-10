@@ -8,6 +8,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .profile-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border: 1px solid #f3f4f6;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover {
+            background: #f9fafb;
+            color: var(--primary-green);
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: #f3f4f6;
+            margin: 0.5rem 0;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-layout">
@@ -15,6 +58,8 @@
             <div class="sidebar-logo">Admin Panel</div>
             @{
                 var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+                var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                bool isAdmin = userRole == "Admin";
             }
             <ul class="sidebar-menu">
                 <li class="sidebar-item @(controller == "Admin" ? "active" : "")">
@@ -41,23 +86,38 @@
                         <span>Quản lý khách hàng</span>
                     </a>
                 </li>
-                <li class="sidebar-item @(controller == "Employees" ? "active" : "")">
-                    <a href="/Admin/Employees">
-                        <i data-lucide="user-cog"></i>
-                        <span>Quản lý nhân viên</span>
-                    </a>
-                </li>
-                <li class="sidebar-item @(controller == "Reports" ? "active" : "")">
-                    <a href="/Admin/Reports">
-                        <i data-lucide="bar-chart-2"></i>
-                        <span>Thống kê</span>
-                    </a>
-                </li>
-                <li class="sidebar-item" style="margin-top: auto;">
-                    <a href="#">
-                        <i data-lucide="settings"></i>
-                        <span>Cài đặt</span>
-                    </a>
+                
+                @if (isAdmin)
+                {
+                    <li class="sidebar-item @(controller == "Employees" ? "active" : "")">
+                        <a href="/Admin/Employees">
+                            <i data-lucide="user-cog"></i>
+                            <span>Quản lý nhân viên</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item @(controller == "Reports" ? "active" : "")">
+                        <a href="/Admin/Reports">
+                            <i data-lucide="bar-chart-2"></i>
+                            <span>Thống kê</span>
+                        </a>
+                    </li>
+                }
+                
+                <li class="sidebar-item @(controller == "Settings" ? "active" : "")" style="margin-top: auto;">
+                    @if (isAdmin)
+                    {
+                        <a href="/Admin/Settings">
+                            <i data-lucide="settings"></i>
+                            <span>Cài đặt</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0)" onclick="showNotification('Bạn không có quyền truy cập Cài đặt.', 'error')">
+                            <i data-lucide="settings"></i>
+                            <span>Cài đặt</span>
+                        </a>
+                    }
                 </li>
             </ul>
         </aside>
@@ -74,18 +134,32 @@
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1.5rem;">
-                    <i data-lucide="bell" style="cursor: pointer; position: relative;">
-                        <span style="position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: var(--accent-red); border-radius: 50%;"></span>
-                    </i>
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; font-size: 0.9rem;">Nguyễn Văn A</div>
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; font-size: 0.9rem;">@User.FindFirst("FullName")?.Value</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">@userRole</div>
+                            </div>
+                            <img src="https://i.pravatar.cc/150?u=admin" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary-green);" />
+                        </div>
+                        <div class="dropdown-menu" id="profile-menu">
+                            <a href="/Admin/Profile" class="dropdown-item">
+                                <i data-lucide="user" style="width: 16px;"></i>
+                                Thông tin cá nhân
+                            </a>
+                            <a href="/Admin/Profile" class="dropdown-item">
+                                <i data-lucide="key" style="width: 16px;"></i>
+                                Đổi mật khẩu
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <form asp-area="Admin" asp-controller="Auth" asp-action="Logout" method="post" style="margin:0;">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" style="background:none; border:none; color: var(--accent-red); cursor:pointer; font-size: 0.75rem; padding:0; font-weight:600;">Đăng xuất</button>
+                                <button type="submit" class="dropdown-item" style="width: 100%; border: none; background: none; color: var(--accent-red); cursor: pointer;">
+                                    <i data-lucide="log-out" style="width: 16px;"></i>
+                                    Đăng xuất
+                                </button>
                             </form>
                         </div>
-                        <img src="https://i.pravatar.cc/150?u=admin" style="width: 40px; height: 40px; border-radius: 50%;" />
                     </div>
                 </div>
             </header>
@@ -112,6 +186,19 @@
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
             localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        });
+
+        // Profile Dropdown Click Logic
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const profileMenu = document.getElementById('profile-menu');
+
+        profileDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            profileMenu.classList.remove('show');
         });
 
         function showNotification(message, type = 'success') {

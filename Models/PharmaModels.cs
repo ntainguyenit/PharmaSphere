@@ -191,4 +191,15 @@ namespace PharmaSphere.Models
         /// <summary>Gets or sets the price of the product at the time of order.</summary>
         public decimal Price { get; set; }
     }
+
+    /// <summary>
+    /// Represents a system-wide setting.
+    /// </summary>
+    public class SystemSetting
+    {
+        public int Id { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Description { get; set; }
+    }
 }

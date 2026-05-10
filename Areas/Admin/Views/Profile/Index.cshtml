@@ -1,0 +1,99 @@
+@model PharmaSphere.Models.User
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+    Layout = "_AdminLayout";
+}
+
+<div class="profile-container" style="padding: 2rem; max-width: 1000px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.875rem; font-weight: 700; color: var(--dark-text); margin-bottom: 0.5rem;">Hồ sơ cá nhân</h1>
+        <p style="color: #6b7280;">Quản lý thông tin tài khoản và bảo mật của bạn.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem;">
+        <!-- Info Card -->
+        <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f3f4f6;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="width: 100px; height: 100px; background: #064E3B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; margin: 0 auto 1rem;">
+                    @Model.FullName.Substring(0, 1).ToUpper()
+                </div>
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--dark-text);">@Model.FullName</h2>
+                <p style="color: #6b7280; font-size: 0.875rem;">@Model.Role.ToString()</p>
+            </div>
+
+            <form asp-action="UpdateInfo" method="post" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                @Html.AntiForgeryToken()
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Họ và tên</label>
+                    <input type="text" name="fullName" value="@Model.FullName" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-green)'" onblur="this.style.borderColor='#d1d5db'" />
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Email</label>
+                    <input type="email" name="email" value="@Model.Email" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-green)'" onblur="this.style.borderColor='#d1d5db'" />
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Số điện thoại</label>
+                    <input type="text" name="phone" value="@Model.Phone" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-green)'" onblur="this.style.borderColor='#d1d5db'" />
+                </div>
+                <button type="submit" style="width: 100%; padding: 0.75rem; background: #064E3B; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 1rem;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    Lưu thay đổi
+                </button>
+            </form>
+        </div>
+
+        <!-- Password Card -->
+        <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f3f4f6;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem;">
+                <div style="background: #fee2e2; color: #ef4444; padding: 0.5rem; border-radius: 8px;">
+                    <i data-lucide="lock" style="width: 20px;"></i>
+                </div>
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--dark-text);">Đổi mật khẩu</h2>
+            </div>
+
+            <form id="changePasswordForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                @Html.AntiForgeryToken()
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Mật khẩu hiện tại</label>
+                    <input type="password" name="currentPassword" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none;" />
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Mật khẩu mới</label>
+                    <input type="password" name="newPassword" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none;" />
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Xác nhận mật khẩu mới</label>
+                    <input type="password" name="confirmPassword" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #d1d5db; outline: none;" />
+                </div>
+                <button type="submit" style="width: 100%; padding: 0.75rem; background: var(--dark-text); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 1rem;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    Cập nhật mật khẩu
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/Admin/Profile/ChangePassword', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    e.target.reset();
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Có lỗi xảy ra, vui lòng thử lại.', 'error');
+            }
+        });
+    </script>
+}

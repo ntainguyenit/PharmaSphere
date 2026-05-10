@@ -10,10 +10,10 @@ using System;
 namespace PharmaSphere.Areas.Admin.Controllers
 {
     /// <summary>
-    /// Controller for managing employees in the admin area.
+    /// Controller for managing employees in the admin area. Restricted to Administrators.
     /// </summary>
     [Area("Admin")]
-    [Authorize(AuthenticationSchemes = "AdminAuth")]
+    [Authorize(AuthenticationSchemes = "AdminAuth", Roles = "Admin")]
     public class EmployeesController : Controller
     {
         private readonly PharmaContext _context;

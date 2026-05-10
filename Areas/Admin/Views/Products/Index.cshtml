@@ -4,45 +4,52 @@
     ViewData["Title"] = "Quản lý sản phẩm";
 }
 
-<div class="admin-header" style="margin-bottom: 2rem;">
+<div class="content-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
     <div>
         <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--dark-text); margin: 0;">@ViewData["Title"]</h1>
         <p style="color: var(--light-text); margin: 0.25rem 0 0;">Danh sách sản phẩm hiện có trong hệ thống</p>
     </div>
-    <a href="/Admin/Products/Create" class="btn-primary" style="background: #064E3B; border-radius: 8px; padding: 0.75rem 1.5rem; border: none; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+    <a href="/Admin/Products/Create" class="btn-primary" style="background: #064E3B; border-radius: 8px; padding: 0.75rem 1.5rem; border: none; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 700; box-shadow: none !important;">
         <i data-lucide="plus" style="width: 20px;"></i> Thêm sản phẩm mới
     </a>
 </div>
 
 <style>
-    /* Lock page scroll */
+    /* Allow page scroll to show at least 5 products without internal scroll */
     body {
-        overflow: hidden !important;
+        overflow: auto !important;
     }
 
     .main-content {
-        height: 100vh;
+        height: auto !important;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        overflow: hidden !important;
+        overflow: visible !important;
     }
 
     .table-container-card {
         flex: 1;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
-        min-height: 0;
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 2rem;
     }
 
     .table-responsive {
-        flex: 1;
-        overflow-y: auto !important;
-        max-height: none !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 1000px; /* Prevent column squeeze and horizontal scroll if possible */
     }
     
     /* Custom scrollbar for premium look */
     .table-responsive::-webkit-scrollbar {
+        height: 6px;
         width: 8px;
     }
     .table-responsive::-webkit-scrollbar-track {
@@ -51,9 +58,6 @@
     .table-responsive::-webkit-scrollbar-thumb {
         background: #ccc;
         border-radius: 4px;
-    }
-    .table-responsive::-webkit-scrollbar-thumb:hover {
-        background: #999;
     }
 </style>
 
@@ -172,7 +176,6 @@
     @if (ViewBag.TotalPages > 1)
     {
         <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 0.5rem; background: #f8f9fa; flex-wrap: wrap;">
-            @* First Page *@
             @if (ViewBag.CurrentPage > 3)
             {
                 <a href="@Url.Action("Index", new { page = 1, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.CategoryId })" 
@@ -181,7 +184,6 @@
                 </a>
             }
 
-            @* Previous Page *@
             @if (ViewBag.CurrentPage > 1)
             {
                 <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.CategoryId })" 
@@ -190,7 +192,6 @@
                 </a>
             }
 
-            @* Page Numbers with Ellipsis *@
             @{
                 int startPage = Math.Max(1, ViewBag.CurrentPage - 1);
                 int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 1);
@@ -215,7 +216,6 @@
                 }
             }
 
-            @* Next Page *@
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
                 <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.CategoryId })" 
@@ -224,7 +224,6 @@
                 </a>
             }
 
-            @* Last Page *@
             @if (ViewBag.CurrentPage < ViewBag.TotalPages - 1)
             {
                 <a href="@Url.Action("Index", new { page = ViewBag.TotalPages, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.CategoryId })" 
