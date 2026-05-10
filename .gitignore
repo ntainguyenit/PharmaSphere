@@ -48,8 +48,8 @@ npm-debug.log*
 #Migrations/
 
 # AppSettings secrets
+appsettings.json
 appsettings.Development.json
-#appsettings.json
 
 # Local history for Visual Studio
 .history/
