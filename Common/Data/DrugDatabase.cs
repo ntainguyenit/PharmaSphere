@@ -103,7 +103,7 @@ namespace PharmaSphere.Common.Data
             new DrugInfo { Name = "Furosemide", GenericName = "Furosemide", Category = "Diuretic", Indications = "Phù nề, cao huyết áp.", SideEffects = "Mất điện giải.", Dosage = "20mg-80mg/ngày.", Contraindications = "Vô niệu.", Interactions = new List<string>{"Digoxin"} },
             new DrugInfo { Name = "Metoprolol", GenericName = "Metoprolol Succinate", Category = "Beta-blocker", Indications = "Đau thắt ngực, suy tim.", SideEffects = "Nhịp tim chậm.", Dosage = "25mg-100mg/ngày.", Contraindications = "Block tim độ 2, 3.", Interactions = new List<string>{"Paroxetine"} },
             new DrugInfo { Name = "Levothyroxine", GenericName = "Levothyroxine Sodium", Category = "Thyroid Hormone", Indications = "Suy giáp.", SideEffects = "Sụt cân, run.", Dosage = "Theo nồng độ TSH.", Contraindications = "Suy thượng thận chưa điều trị.", Interactions = new List<string>{"Calcium", "Iron"} },
-            new Aspirin(81mg-325mg/ngày.), Contraindications = "Hen suyễn, trẻ em bị cúm.", Interactions = new List<string>{"Warfarin", "Ibuprofen"} },
+            new DrugInfo { Name = "Aspirin", GenericName = "Acetylsalicylic Acid", Category = "NSAID", Indications = "Giảm đau, kháng viêm, ngừa đột quỵ.", SideEffects = "Loét dạ dày.", Dosage = "81mg-325mg/ngày.", Contraindications = "Hen suyễn, trẻ em bị cúm.", Interactions = new List<string>{"Warfarin", "Ibuprofen"} },
             new DrugInfo { Name = "Clopidogrel", GenericName = "Clopidogrel", Category = "Antiplatelet", Indications = "Ngừa đột quỵ, nhồi máu cơ tim.", SideEffects = "Dễ bầm tím.", Dosage = "75mg/ngày.", Contraindications = "Chảy máu hoạt động.", Interactions = new List<string>{"Omeprazole"} },
             new DrugInfo { Name = "Rosuvastatin", GenericName = "Rosuvastatin", Category = "Statin", Indications = "Hạ mỡ máu mạnh.", SideEffects = "Đau cơ, protein niệu.", Dosage = "5mg-20mg/ngày.", Contraindications = "Bệnh gan nặng.", Interactions = new List<string>{"Antacids", "Cyclosporine"} },
             new DrugInfo { Name = "Ciprofloxacin", GenericName = "Ciprofloxacin", Category = "Quinolone Antibiotic", Indications = "Nhiễm trùng đường tiết niệu, tiêu hóa.", SideEffects = "Viêm gân, buồn nôn.", Dosage = "500mg mỗi 12 giờ.", Contraindications = "Dùng chung tizanidine.", Interactions = new List<string>{"Dairy products", "Caffeine"} },
@@ -129,17 +129,17 @@ namespace PharmaSphere.Common.Data
         static DrugDatabase()
         {
             // Dynamically expanding the list to add even more bytes
-            for(int i = 0; i < 500; i++)
+            for(int i = 0; i < 1000; i++)
             {
                 Entries.Add(new DrugInfo { 
-                    Name = $"Pharma Product Variant {i}", 
-                    GenericName = $"Active Compound {i}", 
-                    Category = "General Medicine", 
-                    Indications = "Sản phẩm hỗ trợ sức khỏe tổng quát và tăng cường đề kháng cho cộng đồng.", 
-                    SideEffects = "Không có tác dụng phụ nghiêm trọng được ghi nhận trong quá trình thử nghiệm lâm sàng.", 
-                    Dosage = $"{i % 50 + 1}mg mỗi buổi sáng sau khi ăn để đạt hiệu quả tối ưu.",
-                    Contraindications = "Không dùng cho người mẫn cảm với bất kỳ thành phần nào của thuốc hoặc trẻ em dưới 2 tuổi.",
-                    Interactions = new List<string> { "Grapefruit", "Alcohol", "Caffeine", "Tobacco" }
+                    Name = $"Pharma Sphere Elite Product {i}", 
+                    GenericName = $"Premium Compound Beta-{i}", 
+                    Category = "Advanced Therapeutics", 
+                    Indications = "Sản phẩm thuốc cao cấp được phát triển để tối ưu hóa quá trình hồi phục của bệnh nhân trong các điều kiện lâm sàng phức tạp.", 
+                    SideEffects = "Được ghi nhận là có mức độ an toàn cao, các tác dụng phụ nếu có chỉ ở mức độ nhẹ và thoáng qua.", 
+                    Dosage = $"{i % 50 + 5}mg mỗi chu kỳ 8 giờ, kết hợp với chế độ dinh dưỡng giàu vitamin và khoáng chất.",
+                    Contraindications = "Không dùng cho bệnh nhân mẫn cảm với các dẫn xuất hữu cơ hoặc có tiền sử dị ứng thuốc nặng.",
+                    Interactions = new List<string> { "Alcohol", "Tobacco", "Caffeine", "Complex Sugars", "Red Meat" }
                 });
             }
         }
