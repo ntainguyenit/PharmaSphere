@@ -38,6 +38,12 @@ namespace PharmaSphere.Data
         /// <summary>Gets or sets the audit logs table, for tracking system changes.</summary>
         public DbSet<AuditLog> AuditLogs { get; set; }
 
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+
         /// <summary>
         /// Configures the model mapping, entity relationships, and precision for decimal types.
         /// </summary>

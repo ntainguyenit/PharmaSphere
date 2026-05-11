@@ -21,6 +21,9 @@ namespace PharmaSphere.Extensions
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IInventoryService, InventoryService>();
+            services.AddScoped<IReportingService, ReportingService>();
+            services.AddScoped<IMappingService, MappingService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             return services;
         }

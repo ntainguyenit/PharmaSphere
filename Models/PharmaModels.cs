@@ -222,4 +222,78 @@ namespace PharmaSphere.Models
         public DateTime Timestamp { get; set; } = DateTime.Now;
         public string UserId { get; set; }
     }
+
+    /// <summary>
+    /// Represents a pharmaceutical supplier.
+    /// </summary>
+    public class Supplier
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ContactPerson { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a drug manufacturer.
+    /// </summary>
+    public class Manufacturer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Country { get; set; }
+        public string Website { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a customer review for a product.
+    /// </summary>
+    public class Review
+    {
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public virtual Product Product { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
+        public int Rating { get; set; }
+        public string Comment { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    }
+
+    /// <summary>
+    /// Represents a discount coupon.
+    /// </summary>
+    public class Coupon
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public bool IsActive { get; set; } = true;
+        public int UsageLimit { get; set; }
+        public int UsedCount { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a medical prescription.
+    /// </summary>
+    public class Prescription
+    {
+        public int Id { get; set; }
+        public string PatientName { get; set; }
+        public string DoctorName { get; set; }
+        public string DoctorLicenseNumber { get; set; }
+        public DateTime IssueDate { get; set; }
+        public string ImageUrl { get; set; }
+        public bool IsVerified { get; set; } = false;
+        public int? VerifiedById { get; set; }
+        public virtual User VerifiedBy { get; set; }
+        public int OrderId { get; set; }
+        public virtual Order Order { get; set; }
+    }
 }
