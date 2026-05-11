@@ -31,6 +31,17 @@ builder.Services.AddAuthentication(options =>
         options.Cookie.Name = "PharmaSphere_Admin";
     });
 
+// Policy-based Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("StaffOnly", policy => policy.RequireRole("Admin", "Employee"));
+    options.AddPolicy("SuperAdminOnly", policy => policy.Requirements.Add(new PharmaSphere.Core.Security.PermissionRequirement("SuperAdmin")));
+    options.AddPolicy("AdultOnly", policy => policy.Requirements.Add(new PharmaSphere.Core.Security.MinimumAgeRequirement(18)));
+});
+
+builder.Services.AddSingleton<Microsoft.AspNetCore.Authorization.IAuthorizationHandler, PharmaSphere.Core.Security.PermissionHandler>();
+builder.Services.AddSingleton<Microsoft.AspNetCore.Authorization.IAuthorizationHandler, PharmaSphere.Core.Security.MinimumAgeHandler>();
+
 builder.Services.AddDbContext<PharmaSphere.Data.PharmaContext>(options =>
     options.UseLazyLoadingProxies()
            .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

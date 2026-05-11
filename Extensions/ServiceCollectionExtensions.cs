@@ -30,6 +30,7 @@ namespace PharmaSphere.Extensions
             services.AddScoped<IDiscountEngine, DiscountEngine>();
             services.AddScoped<IShippingService, ShippingService>();
             services.AddScoped<IDataExportService, DataExportService>();
+            services.AddScoped<IInteractionCheckerService, InteractionCheckerService>();
 
             return services;
         }
