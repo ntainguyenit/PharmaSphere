@@ -35,6 +35,9 @@ namespace PharmaSphere.Data
         /// <summary>Gets or sets the system settings table, for system-wide configuration data.</summary>
         public DbSet<SystemSetting> SystemSettings { get; set; }
 
+        /// <summary>Gets or sets the audit logs table, for tracking system changes.</summary>
+        public DbSet<AuditLog> AuditLogs { get; set; }
+
         /// <summary>
         /// Configures the model mapping, entity relationships, and precision for decimal types.
         /// </summary>

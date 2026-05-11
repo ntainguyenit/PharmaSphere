@@ -68,6 +68,12 @@ namespace PharmaSphere.Models
 
         /// <summary>Gets or sets the product status.</summary>
         public ProductStatus Status { get; set; } = ProductStatus.InStock;
+
+        /// <summary>Gets or sets the expiration date of the current batch.</summary>
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>Gets or sets the batch number.</summary>
+        public string BatchNumber { get; set; }
     }
 
     /// <summary>
@@ -201,5 +207,19 @@ namespace PharmaSphere.Models
         public string Key { get; set; }
         public string Value { get; set; }
         public string Description { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an audit log entry for tracking system changes.
+    /// </summary>
+    public class AuditLog
+    {
+        public int Id { get; set; }
+        public string EntityName { get; set; }
+        public string EntityId { get; set; }
+        public string Action { get; set; } // Create, Update, Delete
+        public string Changes { get; set; } // JSON or text representation of changes
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+        public string UserId { get; set; }
     }
 }

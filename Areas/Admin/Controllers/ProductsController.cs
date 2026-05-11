@@ -12,41 +12,22 @@ namespace PharmaSphere.Areas.Admin.Controllers
     [Authorize(AuthenticationSchemes = "AdminAuth")]
     public class ProductsController : Controller
     {
-        private readonly PharmaContext _context;
+        private readonly IProductService _productService;
+        private readonly IAuditService _auditService;
 
-        public ProductsController(PharmaContext context)
+        public ProductsController(IProductService productService, IAuditService auditService)
         {
-            _context = context;
+            _productService = productService;
+            _auditService = auditService;
         }
 
-        /// <summary>
-        /// Displays the list of products with search, filtering and pagination.
-        /// </summary>
         public async Task<IActionResult> Index(string searchTerm, int? categoryId, int page = 1)
         {
             int pageSize = 5;
-            var query = _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .AsQueryable();
+            var products = await _productService.GetProductsAsync(searchTerm, categoryId, page, pageSize);
+            var totalItems = await _productService.GetTotalProductCountAsync(searchTerm, categoryId);
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
-            }
-
-            if (categoryId.HasValue)
-            {
-                query = query.Where(p => p.CategoryId == categoryId.Value);
-            }
-
-            var totalItems = await query.CountAsync();
-            var products = await query.OrderByDescending(p => p.Id)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.SearchTerm = searchTerm;
@@ -55,82 +36,76 @@ namespace PharmaSphere.Areas.Admin.Controllers
             return View(products);
         }
 
-        /// <summary>
-        /// Displays the form to create a new product.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = await _context.Categories.ToListAsync();
-            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
+            ViewBag.Brands = await _productService.GetBrandsAsync();
             return View(new Product());
         }
 
-        /// <summary>
-        /// Processes the creation of a new product.
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Thêm sản phẩm mới thành công!";
-                return RedirectToAction(nameof(Index));
+                bool success = await _productService.CreateProductAsync(product);
+                if (success)
+                {
+                    await _auditService.LogAsync("Product", product.Id.ToString(), "Create", $"Sản phẩm {product.Name} đã được tạo.", User.Identity?.Name ?? "Admin");
+                    TempData["Success"] = "Thêm sản phẩm mới thành công!";
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewBag.Categories = await _context.Categories.ToListAsync();
-            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
+            ViewBag.Brands = await _productService.GetBrandsAsync();
             return View(product);
         }
 
-        /// <summary>
-        /// Displays the form to edit an existing product.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
             if (product == null) return NotFound();
 
-            ViewBag.Categories = await _context.Categories.ToListAsync();
-            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
+            ViewBag.Brands = await _productService.GetBrandsAsync();
             return View(product);
         }
 
-        /// <summary>
-        /// Processes the update of an existing product.
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Update(product);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Cập nhật sản phẩm thành công!";
-                return RedirectToAction(nameof(Index));
+                bool success = await _productService.UpdateProductAsync(product);
+                if (success)
+                {
+                    await _auditService.LogAsync("Product", product.Id.ToString(), "Update", $"Sản phẩm {product.Name} đã được cập nhật.", User.Identity?.Name ?? "Admin");
+                    TempData["Success"] = "Cập nhật sản phẩm thành công!";
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewBag.Categories = await _context.Categories.ToListAsync();
-            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
+            ViewBag.Brands = await _productService.GetBrandsAsync();
             return View(product);
         }
 
-        /// <summary>
-        /// Deletes a product.
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Đã xóa sản phẩm thành công.";
+                bool success = await _productService.DeleteProductAsync(id);
+                if (success)
+                {
+                    await _auditService.LogAsync("Product", id.ToString(), "Delete", $"Sản phẩm {product.Name} đã bị xóa.", User.Identity?.Name ?? "Admin");
+                    TempData["Success"] = "Đã xóa sản phẩm thành công.";
+                }
             }
             return RedirectToAction(nameof(Index));
         }
