@@ -21,7 +21,7 @@ namespace PharmaSphere.Services.Implementations
         {
             // For now, let's assume we store points in SystemSettings or a future User field
             // Since we don't have a LoyaltyPoints field in User yet, let's mock it
-            return 500; // Mock value
+            return await Task.FromResult(500); // Mock value
         }
 
         public async Task AddPointsAsync(int userId, decimal orderAmount)
@@ -37,13 +37,13 @@ namespace PharmaSphere.Services.Implementations
             if (currentPoints < pointsToRedeem) return false;
 
             // Logic to deduct points from user
-            return true;
+            return await Task.FromResult(true);
         }
 
         public async Task<decimal> CalculateDiscountFromPointsAsync(int userId)
         {
             int points = await GetPointsAsync(userId);
-            return points * 0.1m; // Each point is worth 0.1 units of currency
+            return await Task.FromResult(points * 0.1m); // Each point is worth 0.1 units of currency
         }
     }
 }

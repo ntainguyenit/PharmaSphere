@@ -49,14 +49,14 @@ namespace PharmaSphere.Services.Implementations
             var info = DrugDatabase.Entries.FirstOrDefault(d => drugName.Contains(d.Name) || d.Name.Contains(drugName));
             if (info == null) return new List<string> { "Không tìm thấy thông tin." };
 
-            return new List<string>
+            return await Task.FromResult(new List<string>
             {
                 $"Tên gốc: {info.GenericName}",
                 $"Danh mục: {info.Category}",
                 $"Chỉ định: {info.Indications}",
                 $"Tác dụng phụ: {info.SideEffects}",
                 $"Liều dùng: {info.Dosage}"
-            };
+            });
         }
     }
 }

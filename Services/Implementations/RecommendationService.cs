@@ -35,7 +35,7 @@ namespace PharmaSphere.Services.Implementations
 
             // Mocking the 'Similar Users' logic
             var recommendations = await _context.Products
-                .Where(p => !purchasedProductIds.Contains(p.Id) && p.Status == ProductStatus.Active)
+                .Where(p => !purchasedProductIds.Contains(p.Id) && p.Status == ProductStatus.InStock)
                 .OrderBy(p => Guid.NewGuid()) // Random for mock
                 .Take(count)
                 .ToListAsync();
@@ -49,7 +49,7 @@ namespace PharmaSphere.Services.Implementations
             if (product == null) return new List<Product>();
 
             return await _context.Products
-                .Where(p => p.Id != productId && p.CategoryId == product.CategoryId && p.Status == ProductStatus.Active)
+                .Where(p => p.Id != productId && p.CategoryId == product.CategoryId && p.Status == ProductStatus.InStock)
                 .Take(count)
                 .ToListAsync();
         }

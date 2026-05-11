@@ -22,27 +22,27 @@ namespace PharmaSphere.Services.Implementations
         public async Task<decimal> CalculateShippingCostAsync(int orderId, string provider)
         {
             // Logic to calculate cost based on weight and distance
-            return provider switch
+            return await Task.FromResult(provider switch
             {
                 "GrabExpress" => 50000,
                 "Giao Hàng Nhanh" => 25000,
                 _ => 15000
-            };
+            });
         }
 
         public async Task<string> GenerateTrackingNumberAsync(int orderId)
         {
-            return "PS" + DateTime.Now.ToString("yyyyMMdd") + orderId.ToString().PadLeft(5, '0');
+            return await Task.FromResult("PS" + DateTime.Now.ToString("yyyyMMdd") + orderId.ToString().PadLeft(5, '0'));
         }
 
         public async Task<ShippingLabel> CreateShippingLabelAsync(int orderId)
         {
-            return new ShippingLabel
+            return await Task.FromResult(new ShippingLabel
             {
                 TrackingNumber = await GenerateTrackingNumberAsync(orderId),
                 Barcode = Guid.NewGuid().ToString("N").ToUpper(),
                 LabelPdf = new byte[0] // Mock data
-            };
+            });
         }
     }
 }

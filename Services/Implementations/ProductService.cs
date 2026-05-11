@@ -78,7 +78,7 @@ namespace PharmaSphere.Services.Implementations
                 _context.Products.Add(product);
                 return await _context.SaveChangesAsync() > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // In a real app, we would log this
                 return false;
