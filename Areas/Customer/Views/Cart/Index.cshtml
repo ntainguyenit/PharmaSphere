@@ -5,7 +5,16 @@
 }
 
 <div class="nav-container" style="padding-top: 3rem; padding-bottom: 5rem;">
-    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem;">Giỏ hàng của bạn</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; margin: 0;">Giỏ hàng của bạn</h1>
+        @if (Model.Count > 0)
+        {
+            <button onclick="confirmClearCart()" style="background: white; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'">
+                <i data-lucide="trash-2" style="width: 18px;"></i>
+                Xóa toàn bộ
+            </button>
+        }
+    </div>
 
     @if (Model.Count == 0)
     {
@@ -99,3 +108,40 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        function confirmClearCart() {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa toàn bộ sản phẩm trong giỏ hàng?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Có, xóa hết!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/Cart/Clear';
+                }
+            });
+        }
+
+        // Add loading state to checkout button
+        const checkoutBtn = document.querySelector('a[href="/Cart/Checkout"]');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function(e) {
+                Swal.fire({
+                    title: 'Đang chuẩn bị...',
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    timer: 500
+                });
+            });
+        }
+    </script>
+}

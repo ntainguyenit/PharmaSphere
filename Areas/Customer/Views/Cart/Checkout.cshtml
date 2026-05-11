@@ -121,5 +121,45 @@
         // Select first one by default
         document.querySelector('.payment-option input[checked]').parentElement.style.borderColor = 'var(--primary-green-dark)';
         document.querySelector('.payment-option input[checked]').parentElement.style.background = '#f0fdf4';
+
+        // Order placement confirmation
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            if (!phone || !address) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thiếu thông tin',
+                    text: 'Vui lòng điền đầy đủ số điện thoại và địa chỉ giao hàng!'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Xác nhận đặt hàng?',
+                text: "Bạn có chắc chắn muốn đặt đơn hàng này?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0d6849',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Xác nhận đặt hàng',
+                cancelButtonText: 'Kiểm tra lại'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Đang xử lý đơn hàng...',
+                        didOpen: () => {
+                            Swal.showLoading()
+                        },
+                        allowOutsideClick: false,
+                        showConfirmButton: false
+                    });
+                    this.submit();
+                }
+            });
+        });
     </script>
 }

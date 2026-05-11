@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header class="main-header">
@@ -98,42 +99,36 @@
         </div>
     </footer>
 
-    <div class="notification-container" id="notificationContainer"></div>
-
     <script>
         lucide.createIcons();
 
         function showNotification(type, title, message) {
-            const container = document.getElementById('notificationContainer');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            
-            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
-            
-            notification.innerHTML = `
-                <i data-lucide="${icon}"></i>
-                <div class="notification-content">
-                    <div class="notification-title">${title}</div>
-                    <div class="notification-message">${message}</div>
-                </div>
-            `;
-            
-            container.appendChild(notification);
-            lucide.createIcons();
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
 
-            setTimeout(() => {
-                notification.classList.add('fade-out');
-                setTimeout(() => notification.remove(), 500);
-            }, 5000);
+            Toast.fire({
+                icon: type, // 'success', 'error', 'warning', 'info'
+                title: title,
+                text: message
+            });
         }
 
         @if (TempData["Success"] != null)
         {
-            <text>showNotification('success', 'Thành công', '@TempData["Success"]');</text>
+            <text>showNotification('success', 'Thành công', @Json.Serialize(TempData["Success"]));</text>
         }
         @if (TempData["Error"] != null)
         {
-            <text>showNotification('error', 'Lỗi', '@TempData["Error"]');</text>
+            <text>showNotification('error', 'Lỗi', @Json.Serialize(TempData["Error"]));</text>
         }
 
         // Global Auth Check for Cart
@@ -141,44 +136,39 @@
         
         function checkAuthAndAddToCart(productId) {
             if (!isAuthenticated) {
-                document.getElementById('authModal').style.display = 'flex';
+                Swal.fire({
+                    title: 'Yêu cầu đăng nhập',
+                    text: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0d6849',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Đăng nhập ngay',
+                    cancelButtonText: 'Để sau',
+                    border: 'none',
+                    borderRadius: '16px'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    }
+                });
                 return;
             }
+            
+            // Show loading state
+            Swal.fire({
+                title: 'Đang xử lý...',
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 800
+            });
+
             window.location.href = `/Cart/Add/${productId}`;
         }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('authModal');
-            if (event.target == modal) {
-                closeAuthModal();
-            }
-        }
     </script>
-
-    <div id="authModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px); animation: fadeIn 0.3s ease;">
-        <div style="background: white; border-radius: 24px; width: 450px; max-width: 90%; padding: 3.5rem 2.5rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative;">
-            <button onclick="closeAuthModal()" style="position: absolute; right: 1.5rem; top: 1.5rem; background: none; border: none; cursor: pointer; color: var(--light-text); transition: all 0.2s;" onmouseover="this.style.color='var(--dark-text)'" onmouseout="this.style.color='var(--light-text)'">
-                <i data-lucide="x" style="width: 28px; height: 28px;"></i>
-            </button>
-            <p style="color: var(--dark-text); font-size: 1.25rem; font-weight: 700; line-height: 1.6; margin-bottom: 2.5rem;">Vui lòng Đăng nhập hoặc Đăng ký tài khoản để tiếp tục thực hiện thao tác!</p>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <a href="/Account/Login" style="background: var(--primary-green-dark); color: white; padding: 1.1rem; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.2s;" onmouseover="this.style.background='#0a523a'" onmouseout="this.style.background='var(--primary-green-dark)'">Đăng nhập ngay</a>
-                <a href="/Account/Register" style="background: white; color: var(--primary-green-dark); padding: 1.1rem; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 1.1rem; border: 2px solid var(--primary-green-dark); transition: all 0.2s;" onmouseover="this.style.background='var(--soft-green)'" onmouseout="this.style.background='white'">Chưa có tài khoản? Đăng ký</a>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        @@keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

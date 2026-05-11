@@ -41,13 +41,15 @@ namespace PharmaSphere.Areas.Customer.Controllers
         /// <param name="id">The product ID to add.</param>
         /// <param name="quantity">The quantity to add (default is 1).</param>
         /// <returns>A redirect to the cart index page or NotFound if the product doesn't exist.</returns>
+        [HttpGet]
         [HttpPost]
         public IActionResult Add(int id, int quantity = 1)
         {
             var product = _context.Products.Find(id);
             if (product == null)
             {
-                return NotFound();
+                TempData["Error"] = "Sản phẩm không tồn tại.";
+                return RedirectToAction("Index", "Shop");
             }
 
             var cart = HttpContext.Session.Get<List<CartItemViewModel>>(CartSessionKey) ?? new List<CartItemViewModel>();
@@ -70,6 +72,7 @@ namespace PharmaSphere.Areas.Customer.Controllers
             }
 
             HttpContext.Session.Set(CartSessionKey, cart);
+            TempData["Success"] = $"Đã thêm {product.Name} vào giỏ hàng.";
             return RedirectToAction("Index");
         }
 
@@ -96,8 +99,20 @@ namespace PharmaSphere.Areas.Customer.Controllers
                     cart.Remove(item);
                 }
                 HttpContext.Session.Set(CartSessionKey, cart);
+                TempData["Success"] = "Đã cập nhật số lượng sản phẩm.";
             }
 
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Clears all products from the cart.
+        /// </summary>
+        /// <returns>A redirect to the cart index page.</returns>
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Remove(CartSessionKey);
+            TempData["Success"] = "Đã xóa toàn bộ giỏ hàng.";
             return RedirectToAction("Index");
         }
 
@@ -116,6 +131,7 @@ namespace PharmaSphere.Areas.Customer.Controllers
             {
                 cart.Remove(item);
                 HttpContext.Session.Set(CartSessionKey, cart);
+                TempData["Success"] = "Đã xóa sản phẩm khỏi giỏ hàng.";
             }
 
             return RedirectToAction("Index");
@@ -184,6 +200,7 @@ namespace PharmaSphere.Areas.Customer.Controllers
 
             // Clear Cart
             HttpContext.Session.Remove(CartSessionKey);
+            TempData["Success"] = "Đặt hàng thành công! Cảm ơn bạn đã mua sắm.";
 
             return RedirectToAction("Success", new { id = order.Id });
         }
