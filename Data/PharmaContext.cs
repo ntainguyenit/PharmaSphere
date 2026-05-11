@@ -14,6 +14,13 @@ namespace PharmaSphere.Data
         /// <param name="options">The options to be used by this context.</param>
         public PharmaContext(DbContextOptions<PharmaContext> options) : base(options) { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Suppress the PendingModelChangesWarning which is very strict in EF Core 9
+            optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+            base.OnConfiguring(optionsBuilder);
+        }
+
         /// <summary>Gets or sets the categories table, representing product classifications.</summary>
         public DbSet<Category> Categories { get; set; }
         
@@ -61,6 +68,14 @@ namespace PharmaSphere.Data
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Coupon>()
+                .Property(c => c.DiscountAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Coupon>()
+                .Property(c => c.DiscountPercentage)
                 .HasPrecision(18, 2);
 
             // Additional model configurations can be added here
