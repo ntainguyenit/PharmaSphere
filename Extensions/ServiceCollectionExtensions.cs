@@ -27,6 +27,9 @@ namespace PharmaSphere.Extensions
             services.AddScoped<ILoyaltyService, LoyaltyService>();
             services.AddScoped<IPaymentGateway, StripePaymentGateway>();
             services.AddScoped<IPrescriptionVerificationService, PrescriptionVerificationService>();
+            services.AddScoped<IDiscountEngine, DiscountEngine>();
+            services.AddScoped<IShippingService, ShippingService>();
+            services.AddScoped<IDataExportService, DataExportService>();
 
             return services;
         }
