@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="PharmaSphere.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="Bogus" Version="35.6.5" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />
@@ -25,9 +29,13 @@
 
   <ItemGroup>
     <Compile Remove="PharmaSphere.Tests\**" />
+    <Compile Remove="PharmaSphere.IntegrationTests\**" />
     <Content Remove="PharmaSphere.Tests\**" />
+    <Content Remove="PharmaSphere.IntegrationTests\**" />
     <EmbeddedResource Remove="PharmaSphere.Tests\**" />
+    <EmbeddedResource Remove="PharmaSphere.IntegrationTests\**" />
     <None Remove="PharmaSphere.Tests\**" />
+    <None Remove="PharmaSphere.IntegrationTests\**" />
   </ItemGroup>
 
 </Project>

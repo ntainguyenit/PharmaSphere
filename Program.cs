@@ -97,3 +97,5 @@ app.MapControllerRoute(
 
 // Run the application
 app.Run();
+
+public partial class Program { }
