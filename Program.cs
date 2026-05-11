@@ -4,6 +4,7 @@ using PharmaSphere.Data;
 using PharmaSphere.Models;
 using System.Collections.Generic;
 using PharmaSphere;
+using PharmaSphere.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

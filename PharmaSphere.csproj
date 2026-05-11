@@ -23,4 +23,11 @@
     <PackageReference Include="QuestPDF" Version="2026.2.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="PharmaSphere.Tests\**" />
+    <Content Remove="PharmaSphere.Tests\**" />
+    <EmbeddedResource Remove="PharmaSphere.Tests\**" />
+    <None Remove="PharmaSphere.Tests\**" />
+  </ItemGroup>
+
 </Project>
