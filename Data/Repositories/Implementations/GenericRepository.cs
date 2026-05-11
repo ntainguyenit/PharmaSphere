@@ -52,6 +52,26 @@ namespace PharmaSphere.Data.Repositories.Implementations
             _dbSet.Remove(entity);
         }
 
+        public virtual async Task<T> GetEntityWithSpec(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<IEnumerable<T>> ListAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).ToListAsync();
+        }
+
+        public virtual async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_dbSet.AsQueryable(), spec);
+        }
+
         public virtual async Task<bool> SaveAsync()
         {
             return await _context.SaveChangesAsync() > 0;

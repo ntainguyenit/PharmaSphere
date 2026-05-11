@@ -19,6 +19,9 @@ namespace PharmaSphere.Data.Repositories.Interfaces
         Task AddAsync(T entity);
         void Update(T entity);
         void Remove(T entity);
+        Task<T> GetEntityWithSpec(ISpecification<T> spec);
+        Task<IEnumerable<T>> ListAsync(ISpecification<T> spec);
+        Task<int> CountAsync(ISpecification<T> spec);
         Task<bool> SaveAsync();
     }
 }
