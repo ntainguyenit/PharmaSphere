@@ -65,5 +65,115 @@ namespace PharmaSphere.Data
 
             // Additional model configurations can be added here
         }
+
+        /// <summary>
+        /// Overrides SaveChangesAsync to automatically capture audit logs for all changes.
+        /// </summary>
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var auditEntries = OnBeforeSaveChanges();
+            var result = await base.SaveChangesAsync(cancellationToken);
+            await OnAfterSaveChanges(auditEntries);
+            return result;
+        }
+
+        private List<AuditEntry> OnBeforeSaveChanges()
+        {
+            ChangeTracker.DetectChanges();
+            var auditEntries = new List<AuditEntry>();
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is AuditLog || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                    continue;
+
+                var auditEntry = new AuditEntry(entry);
+                auditEntry.TableName = entry.Entity.GetType().Name;
+                auditEntries.Add(auditEntry);
+                foreach (var property in entry.Properties)
+                {
+                    string propertyName = property.Metadata.Name;
+                    if (property.Metadata.IsPrimaryKey())
+                    {
+                        auditEntry.KeyValues[propertyName] = property.CurrentValue;
+                        continue;
+                    }
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            auditEntry.NewValues[propertyName] = property.CurrentValue;
+                            break;
+                        case EntityState.Deleted:
+                            auditEntry.OldValues[propertyName] = property.OriginalValue;
+                            break;
+                        case EntityState.Modified:
+                            if (property.IsModified)
+                            {
+                                auditEntry.OldValues[propertyName] = property.OriginalValue;
+                                auditEntry.NewValues[propertyName] = property.CurrentValue;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            foreach (var auditEntry in auditEntries.Where(_ => !_.HasTemporaryProperties))
+            {
+                AuditLogs.Add(auditEntry.ToAudit());
+            }
+
+            return auditEntries.Where(_ => _.HasTemporaryProperties).ToList();
+        }
+
+        private Task OnAfterSaveChanges(List<AuditEntry> auditEntries)
+        {
+            if (auditEntries == null || auditEntries.Count == 0)
+                return Task.CompletedTask;
+
+            foreach (var auditEntry in auditEntries)
+            {
+                foreach (var prop in auditEntry.TemporaryProperties)
+                {
+                    if (prop.Metadata.IsPrimaryKey())
+                    {
+                        auditEntry.KeyValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                    else
+                    {
+                        auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                }
+                AuditLogs.Add(auditEntry.ToAudit());
+            }
+            return SaveChangesAsync();
+        }
+    }
+
+    /// <summary>
+    /// Helper class to manage audit entry data during the SaveChanges process.
+    /// </summary>
+    internal class AuditEntry
+    {
+        public AuditEntry(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry)
+        {
+            Entry = entry;
+        }
+        public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry Entry { get; }
+        public string TableName { get; set; }
+        public Dictionary<string, object> KeyValues { get; } = new Dictionary<string, object>();
+        public Dictionary<string, object> OldValues { get; } = new Dictionary<string, object>();
+        public Dictionary<string, object> NewValues { get; } = new Dictionary<string, object>();
+        public List<Microsoft.EntityFrameworkCore.ChangeTracking.PropertyEntry> TemporaryProperties { get; } = new List<Microsoft.EntityFrameworkCore.ChangeTracking.PropertyEntry>();
+        public bool HasTemporaryProperties => TemporaryProperties.Any();
+
+        public AuditLog ToAudit()
+        {
+            var audit = new AuditLog();
+            audit.EntityName = TableName;
+            audit.Timestamp = DateTime.Now;
+            audit.EntityId = System.Text.Json.JsonSerializer.Serialize(KeyValues);
+            audit.Action = Entry.State.ToString();
+            audit.Changes = System.Text.Json.JsonSerializer.Serialize(new { OldValues, NewValues });
+            return audit;
+        }
     }
 }

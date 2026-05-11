@@ -44,6 +44,9 @@ builder.Services.AddSession(options =>
 // Build the application
 var app = builder.Build();
 
+// Custom Global Exception Middleware
+app.UseMiddleware<PharmaSphere.Middlewares.GlobalExceptionMiddleware>();
+
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
