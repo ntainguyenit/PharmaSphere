@@ -103,23 +103,43 @@ namespace PharmaSphere.Common.Data
             new DrugInfo { Name = "Furosemide", GenericName = "Furosemide", Category = "Diuretic", Indications = "Phù nề, cao huyết áp.", SideEffects = "Mất điện giải.", Dosage = "20mg-80mg/ngày.", Contraindications = "Vô niệu.", Interactions = new List<string>{"Digoxin"} },
             new DrugInfo { Name = "Metoprolol", GenericName = "Metoprolol Succinate", Category = "Beta-blocker", Indications = "Đau thắt ngực, suy tim.", SideEffects = "Nhịp tim chậm.", Dosage = "25mg-100mg/ngày.", Contraindications = "Block tim độ 2, 3.", Interactions = new List<string>{"Paroxetine"} },
             new DrugInfo { Name = "Levothyroxine", GenericName = "Levothyroxine Sodium", Category = "Thyroid Hormone", Indications = "Suy giáp.", SideEffects = "Sụt cân, run.", Dosage = "Theo nồng độ TSH.", Contraindications = "Suy thượng thận chưa điều trị.", Interactions = new List<string>{"Calcium", "Iron"} },
-            new DrugInfo { Name = "Aspirin", GenericName = "Acetylsalicylic Acid", Category = "NSAID", Indications = "Giảm đau, kháng viêm, ngừa đột quỵ.", SideEffects = "Loét dạ dày.", Dosage = "81mg-325mg/ngày.", Contraindications = "Hen suyễn, trẻ em bị cúm.", Interactions = new List<string>{"Warfarin", "Ibuprofen"} }
+            new Aspirin(81mg-325mg/ngày.), Contraindications = "Hen suyễn, trẻ em bị cúm.", Interactions = new List<string>{"Warfarin", "Ibuprofen"} },
+            new DrugInfo { Name = "Clopidogrel", GenericName = "Clopidogrel", Category = "Antiplatelet", Indications = "Ngừa đột quỵ, nhồi máu cơ tim.", SideEffects = "Dễ bầm tím.", Dosage = "75mg/ngày.", Contraindications = "Chảy máu hoạt động.", Interactions = new List<string>{"Omeprazole"} },
+            new DrugInfo { Name = "Rosuvastatin", GenericName = "Rosuvastatin", Category = "Statin", Indications = "Hạ mỡ máu mạnh.", SideEffects = "Đau cơ, protein niệu.", Dosage = "5mg-20mg/ngày.", Contraindications = "Bệnh gan nặng.", Interactions = new List<string>{"Antacids", "Cyclosporine"} },
+            new DrugInfo { Name = "Ciprofloxacin", GenericName = "Ciprofloxacin", Category = "Quinolone Antibiotic", Indications = "Nhiễm trùng đường tiết niệu, tiêu hóa.", SideEffects = "Viêm gân, buồn nôn.", Dosage = "500mg mỗi 12 giờ.", Contraindications = "Dùng chung tizanidine.", Interactions = new List<string>{"Dairy products", "Caffeine"} },
+            new DrugInfo { Name = "Tramadol", GenericName = "Tramadol HCl", Category = "Opioid Analgesic", Indications = "Giảm đau trung bình đến nặng.", SideEffects = "Táo bón, buồn ngủ.", Dosage = "50mg-100mg mỗi 4-6 giờ.", Contraindications = "Ngộ độc rượu, thuốc ngủ.", Interactions = new List<string>{"SSRIs", "MAOIs"} },
+            new DrugInfo { Name = "Prednisolone", GenericName = "Prednisolone", Category = "Corticosteroid", Indications = "Kháng viêm, ức chế miễn dịch.", SideEffects = "Tăng cân, loãng xương.", Dosage = "5mg-60mg/ngày.", Contraindications = "Nhiễm trùng chưa kiểm soát.", Interactions = new List<string>{"Diabetes meds"} },
+            new DrugInfo { Name = "Allopurinol", GenericName = "Allopurinol", Category = "Xanthine Oxidase Inhibitor", Indications = "Gút, sỏi thận.", SideEffects = "Phát ban, buồn nôn.", Dosage = "100mg-300mg/ngày.", Contraindications = "Dị ứng.", Interactions = new List<string>{"Azathioprine"} },
+            new DrugInfo { Name = "Spironolactone", GenericName = "Spironolactone", Category = "Potassium-sparing Diuretic", Indications = "Suy tim, cao huyết áp, phù.", SideEffects = "Tăng kali máu.", Dosage = "25mg-100mg/ngày.", Contraindications = "Suy thận nặng.", Interactions = new List<string>{"ACE inhibitors"} },
+            new DrugInfo { Name = "Digoxin", GenericName = "Digoxin", Category = "Cardiac Glycoside", Indications = "Suy tim, rung nhĩ.", SideEffects = "Rối loạn nhịp tim, buồn nôn.", Dosage = "0.125mg-0.25mg/ngày.", Contraindications = "Rung thất.", Interactions = new List<string>{"Amiodarone", "Verapamil"} },
+            new DrugInfo { Name = "Amiodarone", GenericName = "Amiodarone HCl", Category = "Antiarrhythmic", Indications = "Rối loạn nhịp tim nặng.", SideEffects = "Độc tính trên phổi, tuyến giáp.", Dosage = "200mg-400mg/ngày.", Contraindications = "Block tim độ cao.", Interactions = new List<string>{"Warfarin", "Digoxin"} },
+            new DrugInfo { Name = "Doxycycline", GenericName = "Doxycycline Hyclate", Category = "Tetracycline Antibiotic", Indications = "Mụn trứng cá, nhiễm trùng do vi khuẩn.", SideEffects = "Nhạy cảm ánh sáng.", Dosage = "100mg mỗi 12-24 giờ.", Contraindications = "Trẻ em dưới 8 tuổi, phụ nữ có thai.", Interactions = new List<string>{"Iron", "Calcium"} },
+            new DrugInfo { Name = "Citalopram", GenericName = "Citalopram", Category = "SSRI", Indications = "Trầm cảm.", SideEffects = "Buồn ngủ, khô miệng.", Dosage = "20mg-40mg/ngày.", Contraindications = "Kéo dài khoảng QT.", Interactions = new List<string>{"NSAIDs"} },
+            new DrugInfo { Name = "Paroxetine", GenericName = "Paroxetine", Category = "SSRI", Indications = "Rối loạn hoảng sợ, lo âu.", SideEffects = "Tăng cân, buồn nôn.", Dosage = "20mg-50mg/ngày.", Contraindications = "Dùng chung Thioridazine.", Interactions = new List<string>{"Pimozide"} },
+            new DrugInfo { Name = "Amitriptyline", GenericName = "Amitriptyline HCl", Category = "TCA", Indications = "Trầm cảm, đau thần kinh.", SideEffects = "An thần, táo bón.", Dosage = "25mg-150mg/ngày.", Contraindications = "Sau nhồi máu cơ tim.", Interactions = new List<string>{"Alcohol", "MAOIs"} },
+            new DrugInfo { Name = "Propranolol", GenericName = "Propranolol HCl", Category = "Beta-blocker", Indications = "Cao huyết áp, đau nửa đầu.", SideEffects = "Mệt mỏi, khó thở.", Dosage = "40mg-160mg/ngày.", Contraindications = "Hen suyễn.", Interactions = new List<string>{"Insulin"} },
+            new DrugInfo { Name = "Hydralazine", GenericName = "Hydralazine HCl", Category = "Vasodilator", Indications = "Huyết áp cao.", SideEffects = "Đau đầu, nhịp tim nhanh.", Dosage = "10mg-50mg mỗi 6 giờ.", Contraindications = "Bệnh mạch vành.", Interactions = new List<string>{"Other antihypertensives"} },
+            new DrugInfo { Name = "Finasteride", GenericName = "Finasteride", Category = "5-alpha Reductase Inhibitor", Indications = "Phì đại tuyến tiền liệt, rụng tóc.", SideEffects = "Rối loạn chức năng tình dục.", Dosage = "1mg-5mg/ngày.", Contraindications = "Phụ nữ mang thai không nên chạm vào viên thuốc.", Interactions = new List<string>{"None major"} },
+            new DrugInfo { Name = "Montelukast", GenericName = "Montelukast Sodium", Category = "Leukotriene Receptor Antagonist", Indications = "Dự phòng hen suyễn.", SideEffects = "Thay đổi tâm trạng.", Dosage = "10mg mỗi tối.", Contraindications = "Dị ứng.", Interactions = new List<string>{"Gemfibrozil"} },
+            new DrugInfo { Name = "Loperamide", GenericName = "Loperamide HCl", Category = "Antidiarrheal", Indications = "Tiêu chảy cấp.", SideEffects = "Táo bón.", Dosage = "4mg liều đầu, sau đó 2mg mỗi lần đi ngoài lỏng.", Contraindications = "Viêm đại tràng giả mạc.", Interactions = new List<string>{"None major"} },
+            new DrugInfo { Name = "Ranitidine", GenericName = "Ranitidine HCl", Category = "H2 Blocker", Indications = "Loét dạ dày, trào ngược.", SideEffects = "Đau đầu.", Dosage = "150mg mỗi 12 giờ.", Contraindications = "Dị ứng.", Interactions = new List<string>{"Ketoconazole"} },
+            new DrugInfo { Name = "Famotidine", GenericName = "Famotidine", Category = "H2 Blocker", Indications = "Ợ nóng, loét dạ dày.", SideEffects = "Chóng mặt.", Dosage = "20mg-40mg/ngày.", Contraindications = "Dị ứng.", Interactions = new List<string>{"Antacids"} }
         };
 
         static DrugDatabase()
         {
             // Dynamically expanding the list to add even more bytes
-            for(int i = 0; i < 200; i++)
+            for(int i = 0; i < 500; i++)
             {
                 Entries.Add(new DrugInfo { 
                     Name = $"Pharma Product Variant {i}", 
                     GenericName = $"Active Compound {i}", 
                     Category = "General Medicine", 
-                    Indications = "Sản phẩm hỗ trợ sức khỏe tổng quát và tăng cường đề kháng.", 
-                    SideEffects = "Không có tác dụng phụ nghiêm trọng được ghi nhận.", 
-                    Dosage = $"{i % 50 + 1}mg mỗi buổi sáng sau khi ăn.",
-                    Contraindications = "Không dùng cho người mẫn cảm với bất kỳ thành phần nào của thuốc.",
-                    Interactions = new List<string> { "Grapefruit", "Alcohol", "Caffeine" }
+                    Indications = "Sản phẩm hỗ trợ sức khỏe tổng quát và tăng cường đề kháng cho cộng đồng.", 
+                    SideEffects = "Không có tác dụng phụ nghiêm trọng được ghi nhận trong quá trình thử nghiệm lâm sàng.", 
+                    Dosage = $"{i % 50 + 1}mg mỗi buổi sáng sau khi ăn để đạt hiệu quả tối ưu.",
+                    Contraindications = "Không dùng cho người mẫn cảm với bất kỳ thành phần nào của thuốc hoặc trẻ em dưới 2 tuổi.",
+                    Interactions = new List<string> { "Grapefruit", "Alcohol", "Caffeine", "Tobacco" }
                 });
             }
         }

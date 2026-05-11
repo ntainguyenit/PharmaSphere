@@ -31,6 +31,8 @@ namespace PharmaSphere.Extensions
             services.AddScoped<IShippingService, ShippingService>();
             services.AddScoped<IDataExportService, DataExportService>();
             services.AddScoped<IInteractionCheckerService, InteractionCheckerService>();
+            services.AddScoped<IRecommendationService, RecommendationService>();
+            services.AddScoped<ISystemHealthService, SystemHealthService>();
 
             return services;
         }
